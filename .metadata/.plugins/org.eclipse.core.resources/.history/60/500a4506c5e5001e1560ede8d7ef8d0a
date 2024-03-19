@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CSS Margin</title>
+<style type="text/css">
+div{
+	border : 2px solid black;
+}
+.cls-margin{
+	margin : 30px 40px;
+}
+
+</style>
+
+</head>
+<body>
+	<h1>CSS Margin</h1>
+	<div>여기는 단락1 입니다.</div>
+	<div class="cls-margin">여기는 단락2 입니다.</div>
+	<div>여기는 단락3 입니다.</div>
+	
+</body>
+</html>

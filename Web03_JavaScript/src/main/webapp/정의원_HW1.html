@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>계산기</title>
+</head>
+<body>
+	<input type="number" id="input1">
+	<input type="number" id="input2">
+	<button onclick="add()">더하기</button>
+	<button onclick="sub()">빼기</button>
+	<button onclick="multi()">곱하기</button>
+	<button onclick="div()">나누기</button>
+	<button onclick="reset()">초기화</button>
+	<div id="output"></div>
+	<script type="text/javascript">
+	let output = document.getElementById('output');
+	let input1 = document.getElementById('input1');
+	let input2 = document.getElementById('input2');
+	function add(){
+		let x = parseInt(input1.value);
+		let y = parseInt(input2.value);
+		output.innerHTML += x + ' + ' + y + ' = ' + (x + y) + '<br>';
+	}
+	function sub(){
+		let x = parseInt(input1.value);
+		let y = parseInt(input2.value);
+		output.innerHTML += x + ' - ' + y + ' = ' + (x - y) + '<br>';
+	}
+	function multi(){
+		let x = parseInt(input1.value);
+		let y = parseInt(input2.value);
+		output.innerHTML += x + ' * ' + y + ' = ' + (x * y) + '<br>';
+	}
+	function div(){
+		let x = parseInt(input1.value);
+		let y = parseInt(input2.value);
+		output.innerHTML += x + ' / ' + y + ' = ' + (x / y) + '<br>';
+	}
+	function reset(){
+		output.innerHTML = '';
+	}
+	</script>
+</body>
+</html>

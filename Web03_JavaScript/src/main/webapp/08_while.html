@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>자바스크립트 while문</h1>
+	<div id="output"></div>
+	
+	<script type="text/javascript">
+		let output = document.getElementById('output');
+		
+		for(let i = 2; i < 10; i++){
+			for(let j = 1; j < 10; j++){
+				output.innerHTML += i + ' X ' + j + ' = ' + (i*j) + '<br>';
+			}
+			output.innerHTML += '<div style = "border: 1px solid black;"></div>';
+		}
+		
+		for(let i = 0; i < 7; i++){
+			for(let j = 0; j < 7; j++){
+				if(i %6 == 0 || j % 6 == 0 || i == j || i + j == 6){
+					output.innerHTML += '＊';
+				}else{
+					output.innerHTML += '　';
+				}
+			}
+			output.innerHTML += '<br>';
+		}
+	
+	</script>
+</body>
+</html>

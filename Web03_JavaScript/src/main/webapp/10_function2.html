@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Function2</title>
+</head>
+<body>
+	<h1>자바스크립트 함수</h1>
+	<div id="output"></div>
+	<script type="text/javascript">
+		// * 자바스크립트의 overloading
+		// - JS 함수는 매개변수의 개수와 타입 체크 X => overloading 불가
+		// - 같은 이름으로 정의하면, 나중에 정의한 함수로 덮어씌워짐(overriding)
+		
+		var output = document.getElementById('output');
+		
+		// 생성 안됨
+		function add(x){
+			return x + 1;
+		} // end add
+		
+		function add(x, y = 1){
+			// y = 1 : default 값.
+			// 함수 호출시 y인자 값이 없는 경우 기본값으로 설정
+			return x + y;
+		} // end add
+		
+		var result = add(10, 20);
+		output.innerHTML += 'result = ' + result + '<br>';
+		
+		var result = add(10);
+		output.innerHTML += 'result = ' + result + '<br>';
+		
+		// NaN : Not a Number
+		function add2(x, y){
+			if(isNaN(x) || isNaN(y)){
+				return '숫자가 아니라 덧셈 불가';
+			}else{
+				return x + y;
+			}
+		} // end add2
+		
+		result = add2(10, 'hello');
+		output.innerHTML += 'result = ' + result + '<br>';
+		
+		result = add2(10, 20);
+		output.innerHTML += 'result = ' + result + '<br>';
+		
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+

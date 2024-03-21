@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>연락처 프로그램</title>
+</head>
+<body>
+	<h1>연락처 프로그램</h1>
+	<div>이름 :
+		<input type="text" id="username">
+	</div>
+	<div>전화번호 :
+		<input type="text" id="phone">
+	</div>
+	<div>이메일 :
+		<input type="text" id="email">
+	</div>
+	<div>
+	<button onclick="insert()">입력</button>
+	<button onclick="selectAll()">전체 검색</button>
+	인덱스 <input type="number" id="index">
+	<button onclick="remove()">삭제</button>
+	</div>
+	<div id="output"></div>
+	
+	<script type="text/javascript">
+		output = document.getElementById('output');
+		let books = [];
+		function Contact(name, phone, email){
+			this.name = name;
+			this.phone = phone;
+			this.email = email;
+			
+			this.info = function(){
+				return "이름 : " + this.name + ", 연락처 : " + this.phone + 
+				", 이메일 : " + this.email;
+			}
+		}
+		
+		function insert(){
+			console.log("insert()");
+			let contact = new Contact(username.value, phone.value, email.value);
+			books.push(contact);
+			alert("등록 성공");
+		}
+		
+		function selectAll(){
+			console.log("selectAll()");
+			output.innerHTML = "";
+			for(i in books){
+				output.innerHTML += i + " : " + books[i].info() + "<br>";
+			}
+		}
+		
+		function remove(){
+			console.log("remove()");
+			books.splice(index.value, 1);
+			selectAll();
+		}
+	
+	</script>
+
+</body>
+</html>

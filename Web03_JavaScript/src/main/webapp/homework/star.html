@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Star</title>
+</head>
+<body>
+	<h1>질럿과 마린의 대결</h1>
+	<img alt="" src="../images/zilot.png" onclick="attackToMarine()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<img alt="" src="../images/marine.png" onclick="attackToZilot()" style="transform: scaleX(-1)">
+	
+	<div id="output"></div>
+	
+	<script type="text/javascript">
+		// 생성자
+		function Unit(name, hp, power, defence){
+			this.name = name;
+			this.hp = hp;
+			this.power = power;
+			this.defence = defence;
+			
+			this.attack = function(Unit){
+				let damage = Math.max(this.power - Unit.defence, 0);
+				Unit.hp -= damage;
+				if(this.hp <= 0){
+					output.innerHTML += '죽은 유닛은 공격할 수 없다. <br>';
+					return;
+				}
+				// 예외 처리 : 데미지는 음수가 될 수 없음
+				// 예외 처리 : 공격당한 유닛의 HP가 0 이하가 되면 사망 처리
+				output.innerHTML += this.name + '이(가) 공격했다. <br>';
+				output.innerHTML += Unit.name + '은(는) 공격을 받았다. <br>';
+				output.innerHTML += Unit.name + '은(는) ' + damage + '의 데미지를 입었다. <br>';
+				output.innerHTML += Unit.name + '의 남은 HP : ' + Math.max(Unit.hp, 0) + '<br>';
+				output.innerHTML += '<hr>';
+				
+				if(Unit.hp <= 0){
+					output.innerHTML += Unit.name + '이(가) 사망했다. <br>';
+					output.innerHTML += this.name + '이(가) 승리했다. <br>';
+					output.innerHTML += '<hr>';
+					alert(this.name + '이(가) 승리했다.');
+					return;
+				}
+			}
+			
+		}// end Unit
+		
+		//객체 선언
+		let zilot = new Unit('질럿', 100, 30, 10);
+		let marine = new Unit('마린', 50, 20, 5);
+		
+		function attackToMarine(){
+			alert('내 목숨을 아이어에!');
+			zilot.attack(marine);
+		}
+		
+		function attackToZilot(){
+			alert('한판 붙어볼까, 애송이?');
+			marine.attack(zilot);
+		}
+	
+	</script>
+	
+	
+</body>
+</html>

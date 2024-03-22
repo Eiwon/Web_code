@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+		<label>ID</label>
+		<input type="text" id="uid" onblur="idCheck(this)">
+		<div id="idAlert"></div>
+		<label>비밀번호</label>
+		<input type="text" id="pw" onblur="pwCheck(this)">
+		<div id="pwAlert"></div>
+		<label>비밀번호 확인</label>
+		<input type="text" id="pwCheck" onblur="pwreCheck(this)">
+		<div id="pwreAlert"></div>
+		<label>이름</label>
+		<input type="text" id="name" onblur="nameCheck(this)">
+		<div id="nameAlert"></div>
+		<label>생년월일</label>
+		<input type="date" id="birth" onblur="birthCheck(this)">
+		<div id="birthAlert"></div>
+		<label>이메일</label>
+		<input type="text" id="email" onblur="emailCheck(this)">
+		<div id="emailAlert"></div>
+		<button onclick="regist()">가입하기</button>
+	
+	
+
+	<script type="text/javascript">
+		let idAlert = document.getElementById('idAlert');
+		let pwAlert = document.getElementById('pwAlert');
+		let pwreAlert = document.getElementById('pwreAlert');
+		let valid = new Array(false, false, false, false);
+		
+		function idCheck(input){
+			if(input.value == "test1"){
+				idAlert.innerHTML = "이미 사용 중이거나 탈퇴한 아이디입니다.";
+				valid[0] = false;
+				return;
+			}
+			if(lengthCheck(input) == 1){
+				return;
+			}
+			if(input.value.length < 4 || input.value.length > 21){
+				idAlert.innerHTML = "아이디는 5~20자로 제한합니다.";
+				valid[0] = false;
+				return;
+			}
+			idAlert.innerHTML = "멋진 아이디네요!";
+			valid[0] = true;
+		}
+		
+		
+		function pwCheck(input){
+			if(lengthCheck(input) == 1){
+				return;
+			}
+			if(input.value.length > 7 && input.value.length < 17){
+				pwAlert.innerHTML = "가능한 비밀번호";
+				valid[1] = true;
+				return;
+			}else{
+				pwAlert.innerHTML = "사용할 수 없는 비밀번호";
+				valid[1] = false;
+			}
+		}
+		
+		function pwreCheck(input){
+			let pw = document.getElementById('pw').value;
+			if(input.value == pw){
+				pwreAlert.innerHTML = "비밀번호 일치";
+				valid[2] = true;
+			}else{
+				pwreAlert.innerHTML = "비밀번호가 일치하지 않습니다.";
+				valid[2] = false;
+			}
+		}
+		
+		function nameCheck(input){
+			if(lengthCheck(input) == 1){
+				valid[3] = false;
+				return;
+			}
+			valid[3] = true;
+		}
+		
+		function birthCheck(input){
+			if(lengthCheck(input) == 1){
+				valid[4] = false;
+				return;
+			}
+			valid[4] = true;
+		}
+		
+		function emailCheck(input){
+			if(lengthCheck(input) == 1){
+				valid[5] = false;
+				return;
+			}
+			valid[5] = true;
+		}
+		
+		function lengthCheck(input){
+			if(input.value.length == 0){
+				input.nextElementSibling.innerHTML = '필수정보입니다';
+				return 1;
+			}
+		}
+		
+		function regist(){
+			for(i in valid){
+				if(valid[i] == false){
+					return;	
+				}
+			}
+			alert("성공");
+		}
+	
+	</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js"></script>
+<title>Insert title here</title>
+<style type="text/css">
+.product{
+	border: 1px solid black;
+	width: 200px;
+}
+.selected_list{
+	border: 1px solid black;
+	width: 200px;
+}
+.total{
+	border: 1px solid red;
+	height: 200px;
+}
+
+</style>
+
+
+</head>
+<body>
+	<h1>켈로그 베스트 시리얼</h1>
+	<ul class="product_list" style="list-style-type: none"></ul>
+	<ul class="selected_list" style="list-style-type: none"></ul>
+	<div class="total">
+		<div>총 <span id="totalNum">0</span>개</div>
+		<div><strong id="totalPrice">0</strong>원</div>
+	</div>
+	
+	<script type="text/javascript">
+		function Product(name, price){
+			this.name = name;
+			this.price = price;
+		}
+		
+		let productList = [
+			new Product('호두그래놀라500g', 6500),
+			new Product('현미그래놀라500g', 6700),
+			new Product('땅콩그래놀라500g', 6500)
+			];
+		let priceMap = [];
+		priceMap['호두그래놀라500g'] = {price : 6500, count : 0};
+		priceMap['현미그래놀라500g'] = {price : 6700, count : 0};
+		priceMap['땅콩그래놀라500g'] = {price : 6500, count : 0};
+		
+		let selectedList = [];
+		
+		let totalNum = $('#totalNum');
+		let totalPrice = $('#totalPrice');
+		let totalInfo = {price : 0, count : 0};
+		
+		function calcTotal(){
+			totalInfo.price = 0;
+			totalInfo.count = 0;
+			
+			for(x in priceMap){
+				totalInfo.count += priceMap[x].count;
+				totalInfo.price += priceMap[x].count * priceMap[x].price; 		
+			}
+			totalNum.text(totalInfo.count);
+			totalPrice.text(totalInfo.price);
+		}
+		
+		$(document).ready(function(){
+			for(i in productList){ // 상품 목록 초기화
+				let sellItem = $('<li class="item"></li>');
+				let sellProduct = $('<div class="product"></div>');
+				let sellPdName = $('<strong class="product_name"></strong>');
+				let sellPrice = $('<div class="price"></div>');
+				let sellValue = $('<span class="value"></span>');
+				
+				sellPdName.text(productList[i].name);
+				sellValue.text(productList[i].price);
+				
+				sellPrice.append(sellValue);
+				sellProduct.append(sellPdName);
+				sellProduct.append(sellPrice);
+				sellItem.append(sellProduct);
+				$('.product_list').append(sellItem);
+			}
+			
+			$('.product_list').on('click', 'li .product', function(){
+				let pdName = $(this).find('.product_name').text();
+				let pdPrice = $(this).find('.price .value').text();
+				
+				if(selectedList[pdName] != undefined){// 이미 선택한 물건
+					alert('이미 선택한 물건입니다.');
+					return;
+				}
+				
+				selectedList[pdName] = parseInt(pdPrice);
+				
+				// 선택한 물건 오브젝트 생성
+				let selectedItem = $('<li class="selected_item"></li>');
+				let selectedProduct = $('<div class="product"></div>');
+				
+				let name = $('<strong class="selected_name"></strong>');
+				let count = $('<input class="count" type="text">');
+				let btnUp = $('<button>+</button>');
+				let btnDown = $('<button>-</button>');
+				let price = $('<div class="price"></div>');
+				let btnDel = $('<button>X</button>');
+				
+				name.text(pdName);
+				price.text(pdPrice);
+				count.val(1);
+				priceMap[pdName].count = 1;
+				
+				count.change(function(){
+					console.log('count change');
+					priceMap[name.text()].count = parseInt($(this).val());
+					price.text(priceMap[name.text()].count * priceMap[name.text()].price);
+					calcTotal();
+				});
+				
+				btnUp.click(function(){
+					console.log('btnUp click');
+					
+					priceMap[name.text()].count++;
+					count.val(priceMap[name.text()].count);
+					price.text(priceMap[name.text()].count * priceMap[name.text()].price + '원');
+					
+					calcTotal();
+				}); // end btnUp.click
+				
+				btnDown.click(function(){
+					console.log('btnDown click');
+					
+					if(priceMap[name.text()].count > 1){
+						priceMap[name.text()].count--;
+						count.val(priceMap[name.text()].count);
+						price.text(priceMap[name.text()].count * priceMap[name.text()].price + '원');
+						
+						calcTotal();
+					}
+				}); // end btnDown.click
+				
+				btnDel.click(function(){
+					console.log('btnDel click');
+					
+					priceMap[name.text()].count = 0;
+					calcTotal();
+					
+					selectedList[name.text()] = undefined;
+					this.parentElement.parentElement.remove();
+					
+				}); // end btnDel.click
+				
+				selectedProduct.append(name);
+				selectedProduct.append(count);
+				selectedProduct.append(btnUp);
+				selectedProduct.append(btnDown);
+				selectedProduct.append(price);
+				selectedProduct.append(btnDel);
+				
+				selectedItem.append(selectedProduct);
+				$('.selected_list').append(selectedItem);
+				
+				calcTotal();
+				
+			}); // end product_list.on
+		}); // end document.ready
+	
+	</script>
+	
+</body>
+</html>

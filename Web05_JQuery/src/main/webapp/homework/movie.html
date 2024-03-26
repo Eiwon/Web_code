@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>영화관 좌석 예매</title>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js"></script>
+<style type="text/css">
+.selected_btn{
+	background-color: red;
+}
+.unselected_btn{
+	background-color: lightgrey;
+}
+.short{
+	width: 500px;
+	height: 200px;
+}
+</style>
+
+</head>
+<body>
+	<h1 style="text-align: center;">영화관 좌석 예매</h1>
+	<div>
+		<div style="display: flex; border: 1px solid black;">
+			<p style="text-align: center; width: 1900px">인원 / 좌석</p><button>초기화</button>
+		</div>
+		<div style="display: flex;">
+			<div id="guestInfo" style="border: 1px solid black; width: 800px; height: 200px;">
+			</div>
+			<div id="movieInfo" style="border: 1px solid black; width: 800px; height: 200px;">
+				<strong class="cinemaName"></strong>
+				<strong class="cinemaNumber"></strong>
+				<strong>남은 좌석 : <strong id="remainSeat"></strong> / <strong id="maxSeat"></strong></strong>
+			</div>
+		</div>
+		<div style="border: 1px solid black; width: 1600px; height: 300px;">
+			<div id="seatInfo"></div>
+		</div>
+		<div style="border: 1px solid black; width: 1600px; height: 200px; display: flex;">
+			<div id="cinemaShort" class="short">
+				<div>극장 : <strong class="cinemaName"></strong></div>
+				<div>상영관 : <strong class="cinemaNumber"></strong></div>
+			</div>
+			<div id="seatShort" class="short">
+				<div>좌석명 : <strong>일반석</strong></div>
+				<div>좌석번호 : <strong id="selected_seat_num"></strong></div>
+			</div>
+			<div id="guestShort" class="short"></div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		let maxGuestNum = 8;
+		let selectedGuestNum = 0;
+		let guestType = ['일반','청소년','경로','우대'];
+		let guestNum = [];
+		let cinemaName = 'CGV 동대문';
+		let cinemaNumber = '3관 10층';
+		let maxSeatNum = 0;
+		let enableSeatNum = 0;
+		let selectedSeatNum = 0;
+		let reservedSeat = [];
+		
+		let seatState = ['none', 'enable', 'selected', 'reserved', 'banned'];
+		let seatInfo = [];
+		seatInfo.push([1, 1, 1, 1, 0, 0, 1, 1, 1, 1]);
+		seatInfo.push([1, 1, 1, 1, 0, 0, 1, 1, 1, 1]);
+		
+		for(let i = 2; i < 7; i++){
+			seatInfo.push([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);	
+		}
+		seatInfo.push([1, 1, 1, 1, 0, 0, 1, 1, 1, 1]);
+		
+		for(x in seatInfo){
+			for(y in seatInfo[x]){
+				if(seatState[seatInfo[x][y]] != 'none'){
+					maxSeatNum++;
+				}
+				if(seatState[seatInfo[x][y]] == 'enable'){
+					enableSeatNum++;
+				}
+			}
+		}
+		
+		
+		for(x in guestType){
+			guestNum[guestType[x]] = 0;
+		}
+		function limitCheck(typeName, selectedNum){
+			// selectedNum가 추가되었을때 총 합이 maxGuestNum보다 큰 경우 false
+			// selectedNum가 추가되었을때 총 합이 selectedSeatNum보다 작은 경우 false
+			console.log("limitCheck");
+			let sum = 0;
+			for(x in guestNum){
+				if(x != typeName){
+					sum += guestNum[x];
+				}
+			}
+			if(sum + selectedNum > maxGuestNum){
+				return false;
+			}
+			if(sum + selectedNum < selectedSeatNum){
+				alert('선택한 좌석이 예매 인원 보다 많습니다.');
+				return false;
+			} 
+			
+			return true;
+		} // end limitCheck
+		
+		let guestInfo = $('#guestInfo');
+		
+		$(document).ready(function(){
+			for(let i = 0; i < guestType.length; i++){
+				let guestRow = $('<div class="guestRow"></div>');
+				guestRow.text(guestType[i]);
+				for(let num = 0; num <= maxGuestNum; num++){
+					let btnGuestNum = $('<input type="button" class="btnGuestNum">');
+					btnGuestNum.val(num);
+					
+					btnGuestNum.click(function(){
+						console.log('btnGuestNum click');
+						// 클릭한 열의 타입명을 가져와서 guestNum 변경
+						let type = this.parentElement.innerText;
+						let num = parseInt(this.value);
+						if(limitCheck(type, num)){
+							console.log('limit available');
+							guestNum[type] = num;
+							selectedGuestNum = 0;
+							for(x in guestNum){
+								selectedGuestNum += guestNum[x];
+							}
+							console.log('총 예매인원 : ' + selectedGuestNum + '명');
+							repaintBtn();
+						}
+						
+					});
+					guestRow.append(btnGuestNum);
+				}
+				
+				guestInfo.append(guestRow);
+			} // end guestNum init
+			
+			function repaintBtn(){
+				// 모든 버튼을 검사하여, 선택된 번호는 red, 선택가능한 번호는 lightgrey, 선택불가 번호는 enable
+				console.log('repaintBtn');
+				$('input.btnGuestNum').each(function(index, element){
+					let type = this.parentElement.innerText;
+					let num = parseInt(this.value);
+					if(limitCheck(type, num) == false){
+						$(element).css('background-color', 'black');
+						$(element).attr('disabled', true);
+					}else if(guestNum[type] == num){
+						$(element).css('background-color', 'red');
+						$(element).attr('disabled', true);
+					}else{
+						$(element).css('background-color', 'lightgrey');
+						$(element).attr('disabled', false);
+					}
+				}); // end each
+			} // end reprintBtn
+			
+			
+			
+			
+			
+			for(x in seatInfo){
+				let row = $('<div></div>');
+				row.text(x);
+				for(y in seatInfo[x]){
+					let seat = seatState[seatInfo[x][y]];
+					let seatElement = $('<input type="button">');
+					if(seat == 'enable'){
+						seatElement.attr('disabled', false);
+						seatElement.val(y);
+						seatElement.addClass('unselected_btn');
+						
+						seatElement.mouseover(function(){
+							if(this.classList.contains('unselected_btn')){
+								this.style.backgroundColor = 'red';
+							}
+						});
+						seatElement.mouseout(function(){
+							if(this.classList.contains('unselected_btn')){
+								this.style.backgroundColor = 'lightgrey';
+							}
+						});
+						seatElement.click(function(){
+							let btnRow = parseInt(this.parentElement.innerText);
+							let btnCol = parseInt(this.value);
+							console.log('좌석 좌표 : ' + btnRow + ', ' + btnCol);
+							
+							// 1. 선택 안한 좌석일 경우
+							if(this.classList.contains('unselected_btn')){
+								if(selectedSeatNum < selectedGuestNum){
+									seatInfo[btnRow][btnCol] = 2;
+									selectedSeatNum++;
+									console.log("선택된 좌석 수 : " + selectedSeatNum);
+								}else{ // 선택 한도 초과
+									alert('이미 좌석을 모두 선택하였습니다.');
+									return;
+								}
+							}else{// 2. 이미 선택한 좌석일 경우 == 선택 취소
+								seatInfo[btnRow][btnCol] = 1;
+								selectedSeatNum--;
+								console.log("선택된 좌석 수 : " + selectedSeatNum);
+							}
+							
+							this.classList.toggle('unselected_btn');
+							this.classList.toggle('selected_btn');
+							
+							// short 좌석번호 최신화
+							refreshSeatShort();
+						});
+						
+					}else if(seat == 'none'){
+						seatElement.css('visibility', 'hidden');
+					}else if(seat == 'reserved'){
+						seatElement.css('background-color', 'orange');
+						seatElement.attr('disabled', true);
+						seatElement.val(y);
+					}
+					seatElement.css('height', '30px');
+					seatElement.css('width', '50px');
+					row.append(seatElement);
+				}
+				$('#seatInfo').append(row);
+			} // end seat init
+			
+			function refreshSeatShort(){
+				let seatShort = $('#selected_seat_num');
+				seatShort.text(' ');
+				for(x in seatInfo){
+					for(y in seatInfo[x]){
+						if(seatInfo[x][y] == 2){
+							seatShort.text(seatShort.text() + x + y + ' ');
+						}
+					}
+				}
+			}
+			
+			
+		}); // end document ready
+	
+		
+		// movieInfo init
+		$('.cinemaName').text(cinemaName);
+		$('.cinemaNumber').text(cinemaNumber);
+		$('#remainSeat').text(enableSeatNum);
+		$('#maxSeat').text(maxSeatNum);
+		// end movieInfo init
+	
+	</script>
+</body>
+</html>

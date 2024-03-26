@@ -24,6 +24,11 @@
 </head>
 <body>
 	<h1>켈로그 베스트 시리얼</h1>
+	<div>
+		<label>전체 선택 <span id="selectNum"></span></label>
+		<input type="checkbox" id="selectAll">
+		<input type="button" value="선택 삭제" id="btnDelete">
+	</div>
 	<ul class="product_list" style="list-style-type: none"></ul>
 	<ul class="selected_list" style="list-style-type: none"></ul>
 	<div class="total">
@@ -32,6 +37,8 @@
 	</div>
 	
 	<script type="text/javascript">
+	// 전체 선택에 체크하면, 모든 체크박스에 체크
+	// 선택 삭제를 누르면, selected_list의 체크박스가 체크된 상품의 이름을 불러와서 제거
 		function Product(name, price){
 			this.name = name;
 			this.price = price;
@@ -47,11 +54,10 @@
 		priceMap['현미그래놀라500g'] = {price : 6700, count : 0};
 		priceMap['땅콩그래놀라500g'] = {price : 6500, count : 0};
 		
-		let selectedList = [];
-		
 		let totalNum = $('#totalNum');
 		let totalPrice = $('#totalPrice');
 		let totalInfo = {price : 0, count : 0};
+		let selectNum = 0;
 		
 		function calcTotal(){
 			totalInfo.price = 0;
@@ -63,10 +69,10 @@
 			}
 			totalNum.text(totalInfo.count);
 			totalPrice.text(totalInfo.price);
-		}
+		} // end calcTotal
 		
 		$(document).ready(function(){
-			for(i in productList){ // 상품 목록 초기화
+			for(i in productList){ // 전체 상품 목록 출력
 				let sellItem = $('<li class="item"></li>');
 				let sellProduct = $('<div class="product"></div>');
 				let sellPdName = $('<strong class="product_name"></strong>');
@@ -87,35 +93,46 @@
 				let pdName = $(this).find('.product_name').text();
 				let pdPrice = $(this).find('.price .value').text();
 				
-				if(selectedList[pdName] != undefined){// 이미 선택한 물건
+				if(priceMap[pdName].count > 0){// 이미 선택한 물건
 					alert('이미 선택한 물건입니다.');
 					return;
 				}
 				
-				selectedList[pdName] = parseInt(pdPrice);
-				
-				// 선택한 물건 오브젝트 생성
+				// 선택한 물건 출력
 				let selectedItem = $('<li class="selected_item"></li>');
-				let selectedProduct = $('<div class="product"></div>');
+				let selectedProduct = $('<div class="selected_product"></div>');
 				
 				let name = $('<strong class="selected_name"></strong>');
+				let sellChk = $('<input type="checkbox" class="select_box">');
 				let count = $('<input class="count" type="text">');
 				let btnUp = $('<button>+</button>');
 				let btnDown = $('<button>-</button>');
 				let price = $('<div class="price"></div>');
-				let btnDel = $('<button>X</button>');
 				
 				name.text(pdName);
 				price.text(pdPrice);
 				count.val(1);
 				priceMap[pdName].count = 1;
 				
+				sellChk.click(function(){
+					console.log('sell checkBox click');
+					if($('#selectAll').prop('checked')){
+						$('#selectAll').prop('checked', false);
+					}
+					if(this.checked == true){
+						selectNum++;
+					}else{
+						selectNum--;
+					}
+					$('#selectNum').text(selectNum);
+				}); // end sellChk click
+				
 				count.change(function(){
 					console.log('count change');
 					priceMap[name.text()].count = parseInt($(this).val());
 					price.text(priceMap[name.text()].count * priceMap[name.text()].price);
 					calcTotal();
-				});
+				}); // end count change
 				
 				btnUp.click(function(){
 					console.log('btnUp click');
@@ -139,23 +156,12 @@
 					}
 				}); // end btnDown.click
 				
-				btnDel.click(function(){
-					console.log('btnDel click');
-					
-					priceMap[name.text()].count = 0;
-					calcTotal();
-					
-					selectedList[name.text()] = undefined;
-					this.parentElement.parentElement.remove();
-					
-				}); // end btnDel.click
-				
 				selectedProduct.append(name);
+				selectedProduct.append(sellChk);
 				selectedProduct.append(count);
 				selectedProduct.append(btnUp);
 				selectedProduct.append(btnDown);
 				selectedProduct.append(price);
-				selectedProduct.append(btnDel);
 				
 				selectedItem.append(selectedProduct);
 				$('.selected_list').append(selectedItem);
@@ -163,6 +169,42 @@
 				calcTotal();
 				
 			}); // end product_list.on
+			
+			$('#selectAll').click(function(){
+				selectNum = 0;
+				if(this.checked == true){
+					$('.select_box').each(function(index, element){
+						this.checked = true;
+						selectNum++;
+					});
+				}else{
+					$('.select_box').each(function(index, element){
+						this.checked = false;
+					});
+				}
+				$('#selectNum').text(selectNum);
+			}); // end selectAll click
+			
+			
+			$('#btnDelete').click(function(){
+				console.log('btnDelete click');
+				$('.selected_product').each(function(index, element){
+					// 체크박스에 체크돼있으면 그 이름을 가져와서 btnDel.click 실행
+					
+					let productInfo = this.children;
+					console.log(productInfo[1].checked);
+					if(productInfo[1].checked == true){
+						let delName = productInfo[0].innerHTML;
+						priceMap[delName].count = 0;
+						calcTotal();
+						this.parentElement.remove();
+						selectNum--;
+					}
+				});
+				$('#selectAll').prop('checked', false);
+				$('#selectNum').text(selectNum);
+			}); // end btnDelete click
+			
 		}); // end document.ready
 	
 	</script>

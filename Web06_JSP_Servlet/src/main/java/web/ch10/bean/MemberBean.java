@@ -1,0 +1,65 @@
+package web.ch10.bean;
+
+import java.io.Serializable;
+
+public class MemberBean implements Serializable{
+	
+	// 아이디, 비밀번호, 이메일, 이메일 수신여부, 이메일 자기소개 정보를 변수로 선언
+	private String userid;
+	private String password;
+	private String email;
+	private String emailAgree;
+	private String introduce;
+	
+	// constructor
+	public MemberBean() {
+		System.out.println("MemberBean() 생성자");
+	}
+	
+	public String getUserId() {
+		return userid;
+	}
+
+	public void setUserId(String userId) {
+		this.userid = userId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmailAgree() {
+		return emailAgree;
+	}
+
+	public void setEmailAgree(String emailAgree) {
+		this.emailAgree = emailAgree;
+	}
+
+	public String getIntroduce() {
+		return introduce;
+	}
+
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
+	}
+
+	@Override
+	public String toString() {
+		return "MemberBean [userId=" + userid + ", password=" + password + ", email=" + email + ", emailAgree="
+				+ emailAgree + ", introduce=" + introduce + "]";
+	}
+	
+}

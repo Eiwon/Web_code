@@ -1,0 +1,12 @@
+
+포트번호 = 프로그램의 주소
+Web server : 정적 컨텐츠 처리
+WAS(Web Application Server) (=Web Container): 동적 컨텐츠 처리(를 위해 DB 컨트롤)
+ㄴ JSP, Servlet은 여기
+
+
+Servlet, JSP : 동적인 웹 콘텐츠를 생성, 처리하는 컴포넌트들을 관리 
+
+Web container(자바 기반 WAS = Servlet, JSP 관리)
+웹 애플리케이션 실행환경 제공
+웹 애플리케이션과 클라이언트 사이의 통신을 중재, 이를 위한 스레드 풀 관리, 암호화

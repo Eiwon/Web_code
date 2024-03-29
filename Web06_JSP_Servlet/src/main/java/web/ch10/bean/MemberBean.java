@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class MemberBean implements Serializable{
 	
 	// 아이디, 비밀번호, 이메일, 이메일 수신여부, 이메일 자기소개 정보를 변수로 선언
-	private String userid;
+	private String userId;
 	private String password;
 	private String email;
 	private String emailAgree;
@@ -17,11 +17,11 @@ public class MemberBean implements Serializable{
 	}
 	
 	public String getUserId() {
-		return userid;
+		return userId;
 	}
 
 	public void setUserId(String userId) {
-		this.userid = userId;
+		this.userId = userId;
 	}
 
 	public String getPassword() {
@@ -58,7 +58,7 @@ public class MemberBean implements Serializable{
 
 	@Override
 	public String toString() {
-		return "MemberBean [userId=" + userid + ", password=" + password + ", email=" + email + ", emailAgree="
+		return "MemberBean [userId=" + userId + ", password=" + password + ", email=" + email + ", emailAgree="
 				+ emailAgree + ", introduce=" + introduce + "]";
 	}
 	

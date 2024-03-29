@@ -10,15 +10,15 @@
 	<h1>회원 가입</h1>
 	<form action="HW2_memberInfo.jsp" method="post">
 		<p>아이디</p>
-		<input type="text" name="userid"> 
+		<input type="text" name="userid" required="required"> 
 		<p>비밀번호</p>
-		<input type="password" name="password"> 
+		<input type="password" name="password" required="required"> 
 		<p>이메일</p>
-		<input type="email" name="email">
+		<input type="email" name="email" required="required">
 		<div>
 		<p>이메일 수신여부</p>
 			<input type="radio" name="emailAgree" value="on">ON 
-			<input type="radio" name="emailAgree" value="off">OFF
+			<input type="radio" name="emailAgree" value="off" checked="checked">OFF
 		</div>
 		<div>
 		<p>관심사항</p>
@@ -29,13 +29,11 @@
 			<input type="checkbox" name="interest" value="walk">산책
 		</div>
 		<p>핸드폰</p>
-		<input type="text" name="phone"> 
+		<input type="text" name="phone" required="required"> 
 		<p>자기소개</p>
-		<textarea rows="4" cols="25" name="introduce"></textarea> 
+		<textarea rows="4" cols="25" name="introduce" required="required"></textarea> 
 		<input type="submit" value="회원가입">
 	</form>
-	
-	
 </body>
 </html>
 <%--

@@ -3,6 +3,7 @@ package edu.web.homework;
 import java.io.Serializable;
 
 public class MemberVO implements Serializable{
+	// useBean을 위한 VO 생성시, parameter name과 변수명이 같아야함
 	private String userid;
 	private String password;
 	private String email;
@@ -34,7 +35,7 @@ public class MemberVO implements Serializable{
 	}
 
 	public String getUserid() {
-		return userid;
+		return userid == null ? "입력된 ID가 없습니다." : userid;
 	}
 
 	public void setUserid(String userid) {
@@ -42,7 +43,7 @@ public class MemberVO implements Serializable{
 	}
 
 	public String getPassword() {
-		return password;
+		return password == null ? "입력된 비밀번호가 없습니다." : password;
 	}
 
 	public void setPassword(String password) {
@@ -50,7 +51,7 @@ public class MemberVO implements Serializable{
 	}
 
 	public String getEmail() {
-		return email;
+		return email == null ? "입력된 이메일이 없습니다." : email;
 	}
 
 	public void setEmail(String email) {
@@ -58,7 +59,7 @@ public class MemberVO implements Serializable{
 	}
 
 	public String getEmailAgree() {
-		return emailAgree;
+		return emailAgree == null ? "수신여부를 선택하지 않았습니다." : emailAgree;
 	}
 
 	public void setEmailAgree(String emailAgree) {
@@ -66,7 +67,7 @@ public class MemberVO implements Serializable{
 	}
 
 	public String getPhone() {
-		return phone;
+		return phone == null ? "입력된 전화번호가 없습니다." : phone;
 	}
 
 	public void setPhone(String phone) {
@@ -74,11 +75,14 @@ public class MemberVO implements Serializable{
 	}
 
 	public String getIntroduce() {
-		return introduce;
+		return introduce == null ? "입력된 자기소개가 없습니다." : introduce;
 	}
 
 	public void setIntroduce(String introduce) {
 		this.introduce = introduce;
 	}
 	
+	public String getInterestToString() {
+		return interest == null ? "입력된 관심사항이 없습니다." : String.join(", ", interest);
+	}
 }

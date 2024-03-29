@@ -4,32 +4,27 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>입력 정보</title>
 </head>
 <body>
+	<%=request.setCharacterEncoding("UTF-8") %>
 	<jsp:useBean id="member" class="edu.web.homework.MemberVO" />
 	<jsp:setProperty property="*" name="member" />
+	<h1>입력 정보</h1>
 	<div>
-		<p>아이디</p>
-		<%=member.getUserid() %>
-		<p>비밀번호</p>
-		<%=member.getPassword() %>
-		<p>이메일</p>
-		<%=member.getEmail() %>
-		<p>이메일 수신여부</p>
-		<%=member.getEmailAgree() %>
-		<p>관심사항</p>
-		<% String[] interest = member.getInterest(); 
-			if(interest != null){
-				for(int i=0; i< interest.length; i++){%>
-			<p><%= (i+1) + ".   " + interest[i]%></p>
-		<%	}}%>
-		<p>핸드폰</p>
-		<%=member.getPhone() %>
-		<p>자기소개</p>
-		<%=member.getIntroduce() %>
-	
+		<ul>
+			<li> 아이디 : <%=member.getUserid() %></li>
+			<li> 비밀번호 : <%=member.getPassword() %></li>
+			<li> 이메일 : <%=member.getEmail() %></li>
+			<li> 이메일 수신여부 : <%=member.getEmailAgree() %></li>
+			<li> 관심사항 : <%=member.getInterestToString() %></li>
+			<li> 핸드폰 : <%=member.getPhone() %></li>
+			<li> 자기소개 : <%=member.getIntroduce() %></li>
+		</ul>
 	</div>
-	
 </body>
 </html>
+
+
+
+

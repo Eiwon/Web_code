@@ -19,17 +19,20 @@
 		}
 		Cookie idCookie = new Cookie("id", id);
 		Cookie pwCookie = new Cookie("pw", pw);
-		idCookie.setMaxAge(60*10);
-		pwCookie.setMaxAge(60*10);
-			
-		response.addCookie(idCookie);
-		response.addCookie(pwCookie);
+		
 		Date date = new Date();
 		int remainHour = 23 - date.getHours();
 		int remainMinute = 59 - date.getMinutes();
 		int remainSecond = 59 - date.getSeconds();
 		
 		int remainTotalSec = remainSecond + remainMinute*60 + remainHour*3600;
+		
+		idCookie.setMaxAge(remainTotalSec);
+		pwCookie.setMaxAge(remainTotalSec);
+		
+		response.addCookie(idCookie);
+		response.addCookie(pwCookie);
+		
 	%>
 
 	<h2>로그인 결과 화면</h2>

@@ -8,15 +8,20 @@
 </head>
 <body>
 	<%
+		// * Cookies
+		// - 웹 브라우저가 저장하는 데이터
+		// - 필요한 정보를 클라이언트(웹 브라우저)에서 저장
+		// - 다양한 정보 추적을 목적으로 데이터가 유지됨
+		// - 주로 브라우저에서 사용자가 선택한 내용들을 저장
 		request.setCharacterEncoding("UTF-8");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		
-		// 파라미터 값으로 쿠캐 생성
+		// 파라미터 값으로 쿠키 생성
 		Cookie firstNameCookie = new Cookie("firstName", firstName);
 		Cookie lastNameCookie = new Cookie("lastName", lastName);
 	
-		// 만료 시간 설정(초단위
+		// 만료 시간 설정(초단위)
 		firstNameCookie.setMaxAge(60*60*24);
 		lastNameCookie.setMaxAge(60*60*24);
 		

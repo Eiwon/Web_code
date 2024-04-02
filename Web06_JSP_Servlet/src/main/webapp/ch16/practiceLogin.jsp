@@ -25,10 +25,10 @@
 	%>
 	<form action="practiceResult.jsp" method="POST">
 		아이디 <br>
-		<input type="text" name="id" required="required" value=<%=id %> ><br>
+		<input type="text" name="id" required="required" value="<%=id %>" ><br>
 		비밀번호 <br>
-		<input type="password" name="pw" required="required" value=<%=pw %> ><br>
-		<input type="checkbox" name="saveAgreed" value="agreed">
+		<input type="password" name="pw" required="required" value="<%=pw %>" ><br>
+		<input type="checkbox" name="saveAgreed" value="agreed" checked="checked">
 		아이디 저장 <br><br>
 		<input type="submit" value="로그인">
 	</form>

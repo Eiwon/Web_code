@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 // 게시글 데이터를 detail.jsp 페이지로 송신
-@WebServlet("/detatil")
+@WebServlet("/detail")
 public class DetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.Session;
 
 // register.jsp에서 전송된 데이터를 수신하는 역할
 @WebServlet("/ch15/member/register") // register.jsp form 요청 URL과 매칭
@@ -34,7 +35,6 @@ public class RegisterServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String emailAgree = request.getParameter("emailAgree");
 		String introduce = request.getParameter("introduce");
-		
 		
 		// DB 연결 생략
 		System.out.println("userId = " + userId);

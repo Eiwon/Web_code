@@ -26,7 +26,6 @@
 	 --%>
 	 <%
 	 	if(request.getParameter("logout") != null){ // 로그 아웃 버튼으로 접근시
-			application.removeAttribute("sessionId");
 			session.invalidate();
 			out.print("<script>alert('로그 아웃!!');</script>");
 		}else if(session.getAttribute("id") != null){ // 로그인 상태에서 URL로 직접 접근시
@@ -34,13 +33,13 @@
 			out.print("<script>location.href='HW3_login_result.jsp'</script>");
 		}
 	 %>
-	 <form action="HW3_login_auth.jsp" method="POST" autocomplete="off" style="align-content: center;">
+	 <form action="HW3_login_auth" method="POST" autocomplete="off" style="align-content: center;">
 	 	<div style="margin-top: 200px; margin-left: 800px">
 	 		<p> ID </p>
 	 		<input type="text" name="id" required="required">
 	 		<p> Password </p>
 	 		<input type="password" name="pw" required="required">
-			<input type="submit" value="로그인">
+			<input type="submit" name="login" value="로그인">
 			<input type="button" value="회원가입" onclick="toRegister()"> 
 		</div>
 	 </form>

@@ -15,20 +15,15 @@
 	
 	<%
 		String id = (String) session.getAttribute("id");
-		String sessionId = (String) application.getAttribute("sessionId");
 		
-		if(sessionId != null && !sessionId.equals(session.getId())){
-			application.removeAttribute("sessionId");
-			out.print("<script>alert('세션이 만료되었습니다!!');</script>");
-			out.print("<script>location.href='HW3.jsp'</script>");
-		}else if(id == null){
+		if(id == null){
 			out.print("<script>alert('로그인 해주세요!!');</script>");
 			out.print("<script>location.href='HW3.jsp'</script>");
 		}
 	%>
 	
 	<h1 style="font-size: 1800%" align="center"><%=id %></h1>
-	<form action="HW3.jsp" method="POST">
+	<form action="HW3_login_auth" method="POST">
 		<input type="submit" value="로그아웃" name="logout">
 	</form>
 	

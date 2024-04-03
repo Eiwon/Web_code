@@ -14,21 +14,19 @@
 	ㄴ out.print("<script>location.href='HW3_login_result.jsp'</script>");
 	- 전송받은 id,pw가 "test", "1234"가 아닌 경우, HW3.jsp 페이지로 이동 --%>
 	<%
-		String id = request.getParameter("id");
-		String pw = request.getParameter("pw");
-		int maxInterval = 30; // 세션 만료 시간 5초
+		String id = (String)request.getAttribute("id");
+		String isValid = (String)request.getAttribute("isValid");
+		
+		int maxInterval = 5; // 세션 만료 시간 5초
 		
 		if(id == null){ // URL로 바로 접근
 			out.print("<script>alert('정상적으로 로그인해주세요!!');</script>");
 			out.print("<script>location.href='HW3.jsp'</script>");
-		} else if(id.equals("test") && pw.equals("1234")){ // 로그인 성공
+		} else if(id.equals("test") && isValid.equals("valid")){ // 로그인 성공
 			session.setAttribute("id", id);
 			session.setMaxInactiveInterval(maxInterval);
-			application.setAttribute("sessionId", session.getId());
-			out.print("<script>location.href='HW3_login_result.jsp'</script>");
-		}else{ // 로그인 실패
+		}else if(isValid.equals("invalid")){ // 로그인 실패
 			out.print("<script>alert('잘못된 아이디 또는 비밀번호 입니다!!');</script>");
-			out.print("<script>location.href='HW3.jsp'</script>");
 		}
 	
 	%>

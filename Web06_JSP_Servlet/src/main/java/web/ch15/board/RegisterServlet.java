@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.websocket.Session;
 
 // register.jsp에서 전송된 데이터를 수신하는 역할
-@WebServlet("/ch15/member/register") // register.jsp form 요청 URL과 매칭
+@WebServlet(name="boardRegister", urlPatterns = "/ch15/member/register") // register.jsp form 요청 URL과 매칭
 public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
      

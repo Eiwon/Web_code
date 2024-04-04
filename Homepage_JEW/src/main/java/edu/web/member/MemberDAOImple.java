@@ -162,6 +162,41 @@ public class MemberDAOImple implements MemberDAO, DBConnection{
 		return res;
 	} // end delete
 
+	@Override
+	public String selectPwById(String userId) {
+		System.out.println("selectPwById()");
+		
+		ResultSet rs = null;
+		String result = "";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			DriverManager.registerDriver(new OracleDriver());
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			System.out.println("DB 연결 성공");
+			pstmt = conn.prepareStatement(SQL_SELECT_PW_BY_ID);
+			pstmt.setString(1, userId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getString(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	} // end selectPwById
+
 	
 	
 	

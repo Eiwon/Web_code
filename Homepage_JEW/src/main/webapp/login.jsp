@@ -7,12 +7,6 @@
 <title>Log In</title>
 </head>
 <body>
-	<%
-		String msg = (String)request.getAttribute("msg");
-		if(msg != null){
-			out.print("<script>alert('" + msg + "');</script>");
-		}
-	%>
 	<form action="loginAuth.do" method="POST">
 		<p>ID</p>
 		<input type="text" required="required" name="userId">

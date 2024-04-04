@@ -2,7 +2,6 @@ package edu.web.member;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +25,8 @@ public class UpdateServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("UpdateServlet doPost()");
-		MemberVO member = new MemberVO((String)request.getSession().getAttribute("userId"), request.getParameter("password"), 
+		String userId = (String)request.getSession().getAttribute("userId");
+		MemberVO member = new MemberVO(userId, request.getParameter("password"), 
 				request.getParameter("email"), request.getParameter("emailAgree"), 
 				request.getParameterValues("interest"), request.getParameter("phone"), 
 				request.getParameter("introduce"));
@@ -39,11 +39,10 @@ public class UpdateServlet extends HttpServlet {
 			msg = "회원 정보 수정 성공";
 		}else {
 			msg = "회원 정보 수정 실패";
+			member = dao.selectByUserId(userId);
 		}
-		
 		request.setAttribute("msg", msg);
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/memberResult.jsp");
-		dispatcher.forward(request, response);
+		getServletContext().getRequestDispatcher("/memberResult.jsp").forward(request, response);
 		
 	} // end doPost
 

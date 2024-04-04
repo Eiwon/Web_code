@@ -23,6 +23,10 @@ public interface DBConnection {
 
 	public static final String SQL_SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME
 			+ " WHERE " + COL_USERID + " = ?";
+	
+	public static final String SQL_SELECT_PW_BY_ID = "SELECT " + COL_PASSWORD
+			+ " FROM " + TABLE_NAME + " WHERE " + COL_USERID + " = ?";
+	
 	public static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET "
 			+ COL_PASSWORD + " = ?, " + COL_EMAIL + " = ?, " + COL_EMAIL_AGREE + " = ?, "
 			+ COL_INTEREST + " = ?, " + COL_PHONE + " = ?, " + COL_INTRODUCE + " = ? WHERE "

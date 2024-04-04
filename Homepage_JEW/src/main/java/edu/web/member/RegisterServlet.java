@@ -2,15 +2,11 @@ package edu.web.member;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-// TODO : memberRegister.jsp에서 전송된 데이터를 DB에 저장
-// DB 저장 후에 login.jsp로 이동(심심하면 alert도 띄우기)
 
 @WebServlet("/register.do")
 public class RegisterServlet extends HttpServlet {
@@ -40,8 +36,8 @@ public class RegisterServlet extends HttpServlet {
 			msg = "회원 가입 실패";
 		}
 		request.setAttribute("msg", msg);
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(path);
-		dispatcher.forward(request, response);
+		request.setAttribute("path", path);
+		getServletContext().getRequestDispatcher("/alert.jsp").forward(request, response);
 		
 	} // end doPost
 

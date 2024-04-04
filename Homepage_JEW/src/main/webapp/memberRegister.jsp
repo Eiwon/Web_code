@@ -12,6 +12,7 @@
 		String msg = (String)request.getAttribute("msg");
 		if(msg != null){
 			out.print("<script>alert('" + msg + "');</script>");
+			request.removeAttribute("msg");
 		}
 	%>
 	<form action="register.do" method="POST">
@@ -36,5 +37,6 @@
 		<textarea rows="4" cols="25" name="introduce" required="required"></textarea>       
         <input type="submit" value="전송"> 
     </form>
+    
 </body>
 </html>

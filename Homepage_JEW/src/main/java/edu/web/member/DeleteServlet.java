@@ -2,16 +2,11 @@ package edu.web.member;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-// TODO : memberResult.jsp에서 이동
-// 		 로그인된 사용자 아이디를 가져와서 DB에 회원 정보 삭제
-//		 삭제 성공 후에 login.jsp 페이지로 이동
 
 @WebServlet("/delete.do")
 public class DeleteServlet extends HttpServlet {
@@ -31,15 +26,13 @@ public class DeleteServlet extends HttpServlet {
 			request.getSession().invalidate();
 			msg = "회원 탈퇴 성공";
 			path = "/login.jsp";
-			response.sendRedirect("login.jsp");
 		}else {
 			msg = "회원 탈퇴 실패";
 			path = "/memberResult.jsp";
-			response.sendRedirect("memberResult.jsp");
 		}
 		request.setAttribute("msg", msg);
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(path);
-		dispatcher.forward(request, response);
+		request.setAttribute("path", path);
+		getServletContext().getRequestDispatcher("/alert.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

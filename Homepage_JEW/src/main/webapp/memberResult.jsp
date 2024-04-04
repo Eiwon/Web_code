@@ -9,10 +9,17 @@
 </head>
 <body>
 	<%
-		MemberVO userInfo = (MemberVO)request.getAttribute("userInfo");
 		String msg = (String)request.getAttribute("msg");
+		MemberVO userInfo = new MemberVO();
+		
 		if(msg != null){
-			out.print("<script>alert('" + msg + "');</script>");
+		out.print("<script>alert('" + msg + "');</script>");
+		request.removeAttribute("msg");
+		}
+		if(request.getAttribute("userInfo") == null){
+			out.print("<script>location.href='select.do';</script>");
+		}else{
+			userInfo = (MemberVO)request.getAttribute("userInfo");
 		}
 	%>
 	<div>

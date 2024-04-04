@@ -2,15 +2,11 @@ package edu.web.member;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-// TODO : 로그인된 사용자만 접근 가능.
-// userId 세션을 제거하고, login.jsp로 이동
 
 @WebServlet("/logout.do")
 public class LogoutServlet extends HttpServlet {
@@ -29,8 +25,8 @@ public class LogoutServlet extends HttpServlet {
 			msg = "로그 아웃 성공";
 		}
 		request.setAttribute("msg", msg);
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
-		dispatcher.forward(request, response);
+		request.setAttribute("path", "/login.jsp");
+		getServletContext().getRequestDispatcher("/alert.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

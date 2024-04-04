@@ -10,10 +10,6 @@
 <body>
 	<%
 		String userId = (String)request.getSession().getAttribute("userId");
-		// TODO : 로그인된 사용자 아이디를 저장
-		// TODO : form action="update.do" method="POST" 생성
-		// TODO : userId를 제외한 모든 정보 수정 가능하게 input 태그 작성
-		// 		  userID는 읽기만 가능하도록 input 태그 생성
 	%>
 	<form action="update.do" method="POST">
 		<p>아이디</p>
@@ -23,7 +19,7 @@
       	<p>이메일</p>
         <input type="email" name="email" required="required">    
       	<p>이메일 수신여부</p>
-        <input type="radio" name="emailAgree" value="yes" >예     
+        <input type="radio" name="emailAgree" value="yes">예     
       	<input type="radio" name="emailAgree" value="no" checked="checked">아니오  
       	<p>취미</p>
 		<input type="checkbox" name="interest" value="IT/인터넷">IT/인터넷

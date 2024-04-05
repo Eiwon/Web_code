@@ -11,18 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/delete.do")
 public class DeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private MemberDAO dao;
 	
-    public DeleteServlet() {
-    	System.out.println("DeleteServlet 생성자");
-    	dao = MemberDAOImple.getInstance();
-    }
+    public DeleteServlet() {}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String reqId = (String)request.getSession().getAttribute("userId");
-		int res = dao.delete(reqId);
+		int res = MemberDAOImple.getInstance().delete(reqId);
 		String path = "", msg = "";
 		if(res == 1) {
+			request.getSession().removeAttribute("userId");
 			request.getSession().invalidate();
 			msg = "회원 탈퇴 성공";
 			path = "/login.jsp";

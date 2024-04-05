@@ -24,8 +24,8 @@
           <input type="email" name="email" placeholder="이메일 입력"
          required="required">    
       	<p>이메일 수신여부</p>
-          <input type="radio" name="emailAgree" value="yes">예     <input
-         type="radio" name="emailAgree" value="no" checked="checked">아니오         
+          <input type="radio" name="emailAgree" value="yes">예     
+      	  <input type="radio" name="emailAgree" value="no" checked="checked">아니오         
       	<p>자기소개</p>
 		<textarea rows="4" cols="30" name="introduce" placeholder="자기소개 입력"
          required="required"></textarea><br>

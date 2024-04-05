@@ -1,6 +1,5 @@
 package edu.web.member;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,13 +24,13 @@ public class MemberDAOImple implements MemberDAO, DBConnection{
 	public int insert(MemberVO vo) {
 		System.out.println("MemberDAOImple insert()");
 		int res = 0;
-		Connection conn = null;
 		PreparedStatement pstmt = null;
+		
 		try {
 			DriverManager.registerDriver(new OracleDriver());
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			pstmt = DriverManager.getConnection(URL, USER, PASSWORD).prepareStatement(SQL_INSERT);
 			System.out.println("DB 연결 성공");
-			pstmt = conn.prepareStatement(SQL_INSERT);
+			
 			pstmt.setString(1, vo.getUserId());
 			pstmt.setString(2, vo.getPassword());
 			pstmt.setString(3, vo.getEmail());
@@ -47,12 +46,7 @@ public class MemberDAOImple implements MemberDAO, DBConnection{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeResource(pstmt);
 		}
 		
 		return res;
@@ -61,34 +55,25 @@ public class MemberDAOImple implements MemberDAO, DBConnection{
 	@Override
 	public MemberVO selectByUserId(String userId) {
 		System.out.println("selectByUserId()");
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		MemberVO member = null;
 		
 		try {
 			DriverManager.registerDriver(new OracleDriver());
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			pstmt = conn.prepareStatement(SQL_SELECT_BY_ID);
+			pstmt = DriverManager.getConnection(URL, USER, PASSWORD).prepareStatement(SQL_SELECT_BY_ID);
 			
 			pstmt.setString(1, userId);
-			
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				member = new MemberVO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), 
 					rs.getString(5).split(", "), rs.getString(6), rs.getString(7));
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				conn.close();
-				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeResource(pstmt, rs);
 		}
 		
 		return member;
@@ -98,13 +83,12 @@ public class MemberDAOImple implements MemberDAO, DBConnection{
 	public int update(MemberVO vo) {
 		System.out.println("update()");
 		int res = 0;
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			DriverManager.registerDriver(new OracleDriver());
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			pstmt = DriverManager.getConnection(URL, USER, PASSWORD).prepareStatement(SQL_UPDATE);
 			System.out.println("DB 연결 성공");
-			pstmt = conn.prepareStatement(SQL_UPDATE);
+			
 			pstmt.setString(1, vo.getPassword());
 			pstmt.setString(2, vo.getEmail());
 			pstmt.setString(3, vo.getEmailAgree());
@@ -120,14 +104,8 @@ public class MemberDAOImple implements MemberDAO, DBConnection{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeResource(pstmt);
 		}
-		
 		return res;
 	} // end update
 
@@ -135,71 +113,72 @@ public class MemberDAOImple implements MemberDAO, DBConnection{
 	public int delete(String userId) {
 		System.out.println("delete()");
 		int res = 0;
-		Connection conn = null;
 		PreparedStatement pstmt = null;
+		
 		try {
 			DriverManager.registerDriver(new OracleDriver());
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			pstmt = DriverManager.getConnection(URL, USER, PASSWORD).prepareStatement(SQL_DELETE);
 			System.out.println("DB 연결 성공");
-			pstmt = conn.prepareStatement(SQL_DELETE);
+
 			pstmt.setString(1, userId);
 			
 			res = pstmt.executeUpdate();
-		
 			System.out.println(res + "행 삭제");
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeResource(pstmt);
 		}
 		
 		return res;
 	} // end delete
 
 	@Override
-	public String selectPwById(String userId) {
+	public String selectPwById(String userId, String pw) {
 		System.out.println("selectPwById()");
 		
 		ResultSet rs = null;
-		String result = "";
-		Connection conn = null;
+		String result = null;
 		PreparedStatement pstmt = null;
 		try {
 			DriverManager.registerDriver(new OracleDriver());
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			pstmt = DriverManager.getConnection(URL, USER, PASSWORD).prepareStatement(SQL_SELECT_PW_BY_ID);
 			System.out.println("DB 연결 성공");
-			pstmt = conn.prepareStatement(SQL_SELECT_PW_BY_ID);
 			pstmt.setString(1, userId);
+			pstmt.setString(2, pw);
 			
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				result = rs.getString(1);
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeResource(pstmt, rs);
 		}
 		
 		return result;
 	} // end selectPwById
 
 	
+	private void closeResource(PreparedStatement pstmt) {
+		try {
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	} // end closeResource
 	
-	
+	private void closeResource(PreparedStatement pstmt, ResultSet rs) {
+		try {
+			rs.close();
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	} // end closeResource
 }
 
 

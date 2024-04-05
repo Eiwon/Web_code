@@ -24,8 +24,10 @@ public interface DBConnection {
 	public static final String SQL_SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME
 			+ " WHERE " + COL_USERID + " = ?";
 	
-	public static final String SQL_SELECT_PW_BY_ID = "SELECT " + COL_PASSWORD
-			+ " FROM " + TABLE_NAME + " WHERE " + COL_USERID + " = ?";
+	public static final String SQL_SELECT_PW_BY_ID = "SELECT " + COL_USERID
+			+ " FROM " + TABLE_NAME + " WHERE " + COL_USERID + " = ? AND " + COL_PASSWORD + " = ?";
+	// 비밀번호는 가져오지 않고 DB에서 비교하는게 좋음
+	// SELECT COL_USERID FROM TABLE_NAME WHERE COL_USERID = ? AND COL_PASSWORD = ?;
 	
 	public static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET "
 			+ COL_PASSWORD + " = ?, " + COL_EMAIL + " = ?, " + COL_EMAIL_AGREE + " = ?, "

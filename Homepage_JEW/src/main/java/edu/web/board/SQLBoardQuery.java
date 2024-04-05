@@ -20,8 +20,8 @@ public interface SQLBoardQuery {
 	public static final String COL_REPLY_CONTENT = "REPLY_CONTENT";
 	
 	// 게시글 20개 단위로 검색
-	public static final String SELECT_ALL_POST = "SELECT * FROM (" + TABLE_POST + 
-			".*, ROW_NUMBER() OVER (ORDER BY " + COL_POST_ID + ") AS RN FROM " + TABLE_POST
+	public static final String SELECT_ALL_POST = "SELECT * FROM (SELECT " + TABLE_POST + 
+			".*, ROW_NUMBER() OVER (ORDER BY " + COL_POST_ID + " DESC) AS RN FROM " + TABLE_POST
 			+ ") WHERE RN BETWEEN ? AND ?";
 	
 	// 입력값을 제목에 포함하는 게시글 20개 단위로 검색
@@ -35,12 +35,11 @@ public interface SQLBoardQuery {
 	
 	// 게시글 추가
 	public static final String INSERT_POST = "INSERT INTO " + TABLE_POST + 
-			" VALUES (?, ?, ?, ?, ?, ?)";
+			" VALUES (POST_ID_SEQUENCE.NEXTVAL, ?, ?, ?, 0, ?)";
 	
 	// 게시글 수정
 	public static final String UPDATE_POST_BY_ID = "UPDATE " + TABLE_POST + " SET "
-			+ COL_POST_TITLE + " = ?, " + COL_POST_CONTENT + " = ?, " + COL_USERID + " = ?, " 
-			+ COL_VIEWS + " = ?, " + COL_WRITE_DATE + " = ? WHERE " + COL_POST_ID + " = ?";
+			+ COL_POST_TITLE + " = ?, " + COL_POST_CONTENT + " = ? WHERE " + COL_POST_ID + " = ?";
 	
 	// 게시글 삭제
 	public static final String DELETE_POST_BY_ID = "DELETE " + TABLE_POST + " WHERE " + 

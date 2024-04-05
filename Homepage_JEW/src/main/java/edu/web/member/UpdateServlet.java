@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// TODO : memberUpdate.jsp에서 전송된 데이터로 DB 회원 정보 수정
-// 		 회원 정보 수정에 성공하면 memberResult.jsp에 MemberVO 데이터 전송하여 출력
-
 @WebServlet("/update.do")
 public class UpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -30,7 +27,7 @@ public class UpdateServlet extends HttpServlet {
 				request.getParameter("email"), request.getParameter("emailAgree"), 
 				request.getParameterValues("interest"), request.getParameter("phone"), 
 				request.getParameter("introduce"));
-		request.setAttribute("userInfo", member);
+		
 		String msg = "";
 		System.out.println(member.toString());
 		
@@ -41,6 +38,7 @@ public class UpdateServlet extends HttpServlet {
 			msg = "회원 정보 수정 실패";
 			member = dao.selectByUserId(userId);
 		}
+		request.setAttribute("userInfo", member);
 		request.setAttribute("msg", msg);
 		getServletContext().getRequestDispatcher("/memberResult.jsp").forward(request, response);
 		

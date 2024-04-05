@@ -26,6 +26,9 @@ public class CharFilter extends HttpFilter implements Filter{
 			throws IOException, ServletException {
 		System.out.println("CharFilter doFilter()");
 		req.setCharacterEncoding("UTF-8");
+		res.setCharacterEncoding("UTF-8");
+		res.setContentType("text/html; charset=UTF-8");
+		
 		chain.doFilter(req, res);
 	} // end doFileter
 	

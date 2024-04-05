@@ -13,8 +13,7 @@
 	<div>
 		<p><%=userId %>님 환영합니다.</p>
 	</div>
-	<!-- location.href로 이동하면 servlet에서 doGet() 호출 -->
-	<button onclick="location.href=''">게시판</button>
+	<button onclick="location.href='board/list?type=search'">게시판</button>
 	<button onclick="location.href='select.do'">회원 정보</button>
 	<button onclick="location.href='logout.do'">로그 아웃</button>
 </body>

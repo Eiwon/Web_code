@@ -6,7 +6,7 @@ public interface MemberDAO {
 	
 	MemberVO selectByUserId(String userId);
 	
-	String selectPwById(String userId);
+	String selectPwById(String userId, String pw);
 	
 	int update(MemberVO vo);
 	

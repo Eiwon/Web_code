@@ -12,11 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private int maxInterval = 60;
-	private MemberDAO dao = null;
     
     public LoginServlet() {
     	System.out.println("LoginServlet 생성자");
-    	dao = MemberDAOImple.getInstance();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,18 +33,17 @@ public class LoginServlet extends HttpServlet {
 		
 		String reqId = request.getParameter("userId");
 		String reqPw = request.getParameter("password");	
-		String matchingPw = dao.selectPwById(reqId);
+		String confirmedId = MemberDAOImple.getInstance().selectPwById(reqId, reqPw);
 		String path = "", msg = "";
 		
 		System.out.println("reqId : " + reqId + ", reqPw : " + reqPw);
 		
-		if((matchingPw != null) && (reqPw.equals(matchingPw))) {
-			// 로그인 성공
+		if(confirmedId != null) { // 로그인 성공
 			request.getSession().setAttribute("userId", reqId);
 			request.getSession().setMaxInactiveInterval(maxInterval);
 			msg = "로그인 성공";
 			path = "/loginResult.jsp";
-		}else {// 로그인 실패
+		}else { // 로그인 실패
 			msg = "잘못된 아이디 또는 비밀번호입니다.";
 			path = "/login.jsp";
 		}

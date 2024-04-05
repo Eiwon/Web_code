@@ -73,6 +73,12 @@ public class PostVO {
 	public void setWriteDate(Date writeDate) {
 		this.writeDate = writeDate;
 	}
+
+	@Override
+	public String toString() {
+		return "PostVO [postId=" + postId + ", postTitle=" + postTitle + ", postContent=" + postContent + ", userId="
+				+ userId + ", views=" + views + ", writeDate=" + writeDate + "]";
+	}
 	
 
 

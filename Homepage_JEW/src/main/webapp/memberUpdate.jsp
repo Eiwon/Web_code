@@ -13,7 +13,7 @@
 	%>
 	<form action="update.do" method="POST">
 		<p>아이디</p>
-		<input type="text" name="userId" value="<%=userId%>" disabled="disabled">
+		<input type="text" name="userId" value="<%=userId%>" readonly="readonly">
 		<p>패스워드</p>
          <input type="password" name="password" required="required">    
       	<p>이메일</p>

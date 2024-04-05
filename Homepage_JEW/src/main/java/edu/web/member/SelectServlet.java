@@ -16,15 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/select.do")
 public class SelectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private MemberDAO dao = null;
+	
     public SelectServlet() {
     	System.out.println("SelectServlet 생성자");
-    	dao = MemberDAOImple.getInstance();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String reqId = (String)request.getSession().getAttribute("userId");
-		MemberVO member = dao.selectByUserId(reqId);
+		MemberVO member = MemberDAOImple.getInstance().selectByUserId(reqId);
 		
 		request.setAttribute("userInfo", member);
 		

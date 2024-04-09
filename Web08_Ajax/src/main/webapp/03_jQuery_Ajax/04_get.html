@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<title>Ajax get</title>
+</head>
+<body>
+	<button>HTTP Get Request를 JSP에 보내고, 그 결과를 가져오는</button>
+	
+	<script type="text/javascript">
+	// $.get(url, callback);
+	$(document).ready(function(){
+		$('button').click(function(){
+			$.get('04_get_test.jsp', function(data, status){
+				alert("Data : " + data + "\n status : " + status);
+			}); // end get
+		}); // end button.click
+	}); // end document
+	
+	
+	</script>
+
+</body>
+</html>

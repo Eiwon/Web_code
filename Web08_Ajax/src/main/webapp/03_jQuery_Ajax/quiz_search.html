@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<title>Search</title>
+</head>
+<body>
+	<div>
+		<input type="text" id="input">
+		<p id="output"></p>
+	</div>
+	
+	
+	<script type="text/javascript">
+		
+		$('#input').keyup(function(){
+			console.log(this.value);
+			let val = this.value;
+			if(val.length == 0){
+				$('#output').html("");
+				return;
+			}
+			$.ajax({
+				type : "get",
+				url : "../search.do",
+				data : {
+					"value" : val
+				},
+				success : function(result){
+					let parsed = JSON.parse(result);
+					let str = "";
+					for(x in parsed){
+						console.log(parsed[x].title);
+						str += "<a href='https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=" 
+								+ parsed[x].title + "'>" + parsed[x].title + "</a><br>";
+					}
+					$('#output').html(str);
+				}
+			}); // end ajax
+		}); // end input.keyup
+	
+	
+	</script>
+
+</body>
+</html>

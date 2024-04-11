@@ -1,0 +1,49 @@
+
+1. 주제
+	게시판, 댓글, 로그인
+
+2. 기능
+	게시판
+		게시글을 등록할 수 있다.
+		게시글을 조회할 수 있다.
+			게시글 아이디에 맞게 조회할 수 있다. 
+			전체 조회할 수 있다.(+ 페이징 처리)
+		게시글을 수정할 수 있다.
+		게시글을 삭제할 수 있다.
+		
+	댓글
+		댓글을 등록할 수 있다.
+		댓글을 전체 조회할 수 있다.
+		댓글을 수정할 수 있다.
+		댓글을 삭제할 수 있다.
+	
+	로그인
+		로그인을 수행할 수 있다.
+		로그아웃을 수행할 수 있다.
+		로그인된 사용자만 글을 작성할 수 있다.
+	
+3. DB 테이블
+	BOARD
+		게시글 번호 	(BOARD_ID : NUMBER)					- PK
+		게시글 제목 	(BOARD_TITLE : VARCHAR2(100))
+		게시글 내용 	(BOARD_CONTENT : VARCHAR2(500))
+		게시글 작성자 	(MEMBER_ID : VARCHAR2(20))			- FK
+		게시글 작성일 	(BOARD_DATE_CREATED : TIMESTAMP)
+		
+	REPLY
+		댓글 번호		(REPLY_ID : NUMBER)					- PK
+		게시글 번호	(BOARD_ID : NUMBER)					- FK
+		댓글 작성자	(MEMBER_ID : VARCHAR2(20))			- FK
+		댓글 내용		(REPLY_CONTENT : VARCHAR2(100))
+		댓글 작성일	(REPLY_DATE_CREATED : TIMESTAMP)
+	
+	
+4. VO
+
+
+
+
+
+
+
+

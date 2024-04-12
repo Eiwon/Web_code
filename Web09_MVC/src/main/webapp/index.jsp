@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<jsp:forward page="list.do">URL은 index.jsp, 실제 내용은 list.do</jsp:forward>
+	<jsp:forward page="list.do"/>
 </body>
 </html>

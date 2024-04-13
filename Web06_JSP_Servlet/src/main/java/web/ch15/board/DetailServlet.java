@@ -37,7 +37,6 @@ public class DetailServlet extends HttpServlet {
 		ServletContext context = getServletContext();
 		// ServletContext 객체 참조
 		
-		
 		// RequestDispatcher : 클라이언트로부터 발생된 요청을 
 		// 					다른 경로의 리소스(Servlet or JSP)로 전송하는 역할
 		RequestDispatcher dispatcher = context.getRequestDispatcher("/ch15/board/detail.jsp");

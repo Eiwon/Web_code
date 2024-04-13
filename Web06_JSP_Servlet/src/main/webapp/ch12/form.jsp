@@ -22,7 +22,16 @@
 		value="값" : 전송할 값
 		
 	 -->
-	
+	<!-- GET 방식으로 result.jsp에 데이터 전송 -->
+	<!-- Query String으로 전송 : ?key=value&key2=value2&... -->
+	<form action="result.jsp" method="get">
+		<p>이름</p>
+		<input type="text" name="name" placeholder="이름 입력">
+		<p>나이</p>
+		<input type="number" name="age" placeholder="나이 입력">
+		<br><br>
+		<input type="submit" value="전송">
+	</form>
 
 
 </body>

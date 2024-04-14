@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="web.ch10.bean.MemberBean"/>
     <fullyQualifiedTypeName name="java.io.Serializable"/>
     <fullyQualifiedTypeName name="web.ch15.board.BoardBean"/>
     <fullyQualifiedTypeName name="javax.websocket.Session"/>
-    <fullyQualifiedTypeName name="javax.servlet.ServletContext"/>
     <fullyQualifiedTypeName name="web.ch21.member.MemberDAO"/>
     <fullyQualifiedTypeName name="web.ch21.member.MemberDAOImple"/>
     <fullyQualifiedTypeName name="oracle.jdbc.driver.OracleDriver"/>
@@ -41,11 +39,7 @@
     <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="edu.web.persistence.ReplyQuery"/>
-    <fullyQualifiedTypeName name="java.sql.Connection"/>
-    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
-    <fullyQualifiedTypeName name="edu.web.dbcp.connmgr.ConnMgr"/>
     <fullyQualifiedTypeName name="edu.web.domain.ReplyVO"/>
     <fullyQualifiedTypeName name="org.json.simple.JSONArray"/>
     <fullyQualifiedTypeName name="org.json.simple.JSONObject"/>
@@ -54,4 +48,16 @@
     <fullyQualifiedTypeName name="edu.web.persistence.ReplyDAOImple"/>
     <fullyQualifiedTypeName name="edu.web.persistence.ReplyDAO"/>
     <fullyQualifiedTypeName name="edu.web.controller.LoginController"/>
+    <fullyQualifiedTypeName name="edu.web.persistence.MemberQuery"/>
+    <fullyQualifiedTypeName name="java.sql.Connection"/>
+    <fullyQualifiedTypeName name="edu.web.dbcp.connmgr.ConnMgr"/>
+    <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
+    <fullyQualifiedTypeName name="edu.web.persistence.MemberDAO"/>
+    <fullyQualifiedTypeName name="edu.web.persistence.MemberDAOImple"/>
+    <fullyQualifiedTypeName name="edu.web.domain.MemberVO"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletResponse"/>
+    <fullyQualifiedTypeName name="javax.servlet.ServletContext"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletRequest"/>
+    <fullyQualifiedTypeName name="java.nio.file.spi.FileSystemProvider"/>
 </qualifiedTypeNameHistroy>

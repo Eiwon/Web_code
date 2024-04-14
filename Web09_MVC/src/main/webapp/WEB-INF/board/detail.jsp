@@ -49,7 +49,7 @@
 			<input type="submit" value="삭제하기"> 
 		</form>
 		<input type="button" value="목록으로"
-			onclick="location.href='index.jsp'">
+			onclick="location.href='../index.jsp'">
 	</div>
 	
 	<script type="text/javascript">

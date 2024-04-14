@@ -1,6 +1,7 @@
 package edu.web.controller;
 
 import java.io.IOException;
+import java.nio.file.spi.FileSystemProvider;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -16,9 +17,11 @@ import edu.web.persistence.BoardDAOImple;
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private static final String BOARD_URL = "WEB-INF/board/";
+    private static final String LOGIN_URL = "WEB-INF/login/";
     
     private static final String BOARD = "/board/";
     private static final String REPLY = "/reply/";
+    private static final String LOGIN = "/login/";
     
     private static final String MAIN = "index";
     private static final String LIST = "list";
@@ -26,15 +29,20 @@ public class BoardController extends HttpServlet {
     private static final String DETAIL = "detail";
     private static final String UPDATE = "update";
     private static final String DELETE = "delete";
+    private static final String REPLYLIST = "replyList";
+    private static final String LOGINN = "login";
+    private static final String IDDUPCHK = "idDupChk";
     private static final String EXTENSION = ".jsp";
     private static final String SERVER_EXTENSION = ".do";
     
     private BoardDAOImple boardDao = null;
     private ReplyController replyController = null;
+    private LoginController loginController = null;
     
     public BoardController() {
     	boardDao = BoardDAOImple.getInstance();
     	replyController = ReplyController.getInstance();
+    	loginController = LoginController.getInstance();
     }
 
     @Override
@@ -50,18 +58,31 @@ public class BoardController extends HttpServlet {
 		// /board/detail.jsp				/board/delete.do
 		// /board/update.jsp				jsp는 do로 바꾸고 GET, POST로 구분
 		
-		//									/reply/list.do
+		// 									/reply/list.do
 		// 									/reply/register.do
 		//									/reply/update.do
 		//									/reply/delete.do
 		
-		if(requestURI.contains(BOARD)) {
-			routeBoard(request, response);
-		}else if(requestURI.contains(REPLY)) {
-			routeReply(request, response);
+		// /login/login.jsp					/login/login.do
+		// /login/register.jsp				/login/register.do
+		// 									/login/idDupChk.do
+		
+		if(requestURI.contains(LOGIN)) {
+			System.out.println("login 호출 확인");
+			routeLogin(request, response);	
 		}else if(requestURI.contains(LIST + SERVER_EXTENSION)) {
 			System.out.println("list 호출 확인");
 			list(request, response);
+		}else if(request.getSession().getAttribute("memberId") != null) {
+			// 세션 확인
+			if(requestURI.contains(BOARD)) {
+				routeBoard(request, response);
+			}else if(requestURI.contains(REPLY)) {
+				routeReply(request, response);
+			}
+		}else {
+			getServletContext().getRequestDispatcher("/" + "WEB-INF/login/" + LOGINN + EXTENSION)
+							   .forward(request, response);
 		}
 		
 		
@@ -105,7 +126,7 @@ public class BoardController extends HttpServlet {
 			if(requestMethod.equals("POST")){
 				replyController.registerPOST(request, response);
 			}
-		} else if(requestURI.contains(LIST + SERVER_EXTENSION)) {
+		} else if(requestURI.contains(REPLYLIST + SERVER_EXTENSION)) {
 			System.out.println("reply list 호출 확인");
 			if(requestMethod.equals("POST")) {
 				replyController.listPOST(request, response);
@@ -121,9 +142,33 @@ public class BoardController extends HttpServlet {
 				replyController.deletePOST(request, response);
 			}
 		}
+	} // end routeReply
+	
+	private void routeLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String requestURI = request.getRequestURI();
+		String requestMethod = request.getMethod();
 		
-		
-	}
+		if(requestURI.contains(REGISTER + SERVER_EXTENSION)) {
+			System.out.println("login register " + requestMethod);
+			if(requestMethod.equals("GET")) {
+				loginController.registerGET(request, response, getServletContext());
+			}else if(requestMethod.equals("POST")) {
+				loginController.registerPOST(request, response, getServletContext());
+			}
+		}else if(requestURI.contains(LOGINN + SERVER_EXTENSION)) {
+			System.out.println("login login " + requestMethod);
+			if(requestMethod.equals("GET")) {
+				loginController.loginGET(request, response, getServletContext());
+			}else if(requestMethod.equals("POST")) {
+				loginController.loginPOST(request, response, getServletContext());
+			}
+		}else if(requestURI.contains(IDDUPCHK + SERVER_EXTENSION)) {
+			System.out.println("login idDupChk " + requestMethod);
+			if(requestMethod.equals("POST")) {
+				loginController.idDupChk(request, response);
+			}
+		}
+	} // end routeLogin
 
 	// TODO : 전체 게시판 내용(list)을 DB에서 가져오고, 그 데이터를 list.jsp 페이지에 전송
 	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -151,7 +196,7 @@ public class BoardController extends HttpServlet {
 		String boardContent = request.getParameter("boardContent");
 		String memberId = request.getParameter("memberId");
 		BoardVO board = new BoardVO(0, boardTitle, boardContent, memberId, null);
-		String path = MAIN + EXTENSION;
+		String path = getServletContext().getContextPath() + "/" + MAIN + EXTENSION;
 		int res = boardDao.insert(board);
 		
 		if(res == 1) {
@@ -191,7 +236,7 @@ public class BoardController extends HttpServlet {
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		String boardTitle = request.getParameter("boardTitle");
 		String boardContent = request.getParameter("boardContent");
-		String path = MAIN + EXTENSION;
+		String path = getServletContext().getContextPath() + "/" + MAIN + EXTENSION;
 		
 		int res = boardDao.update(new BoardVO(boardId, boardTitle, boardContent, null, null));
 		
@@ -208,7 +253,7 @@ public class BoardController extends HttpServlet {
 		System.out.println("deletePOST()");
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		int res = boardDao.delete(boardId);
-		String path = MAIN + EXTENSION;
+		String path = getServletContext().getContextPath() + "/" + MAIN + EXTENSION;
 		
 		if(res == 1) {
 			response.sendRedirect(path);

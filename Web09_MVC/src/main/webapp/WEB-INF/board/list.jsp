@@ -34,5 +34,6 @@
 		</tbody>
 	</table>
 	<input type="button" value="글 작성" onclick="location.href='board/register.do'">
+	<input type="button" value="로그인" onclick="location.href='login/login.do'">
 </body>
 </html>

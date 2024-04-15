@@ -3,12 +3,12 @@ package edu.web.persistence;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.web.dbcp.connmgr.ConnMgr;
 import edu.web.domain.ReplyVO;
+import edu.web.util.PageCriteria;
 
 public class ReplyDAOImple implements ReplyDAO, ReplyQuery {
 
@@ -120,6 +120,66 @@ public class ReplyDAOImple implements ReplyDAO, ReplyQuery {
 	
 		return res;
 	}
+
+	@Override
+	public List<ReplyVO> selectPage(int boardId, PageCriteria criteria) {
+		System.out.println("selectPage()");
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ReplyVO> list = new ArrayList<>();
+		
+		try {
+			conn = ConnMgr.getConnection();
+			pstmt = conn.prepareStatement(SELECT_PAGESCORP);
+			pstmt.setInt(1, boardId);
+			pstmt.setInt(2, criteria.getStart());
+			pstmt.setInt(3, criteria.getEnd());
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				list.add(new ReplyVO(rs.getInt(REPLY_ID), rs.getInt(BOARD_ID), 
+						rs.getString(MEMBER_ID), rs.getString(REPLY_CONTENT), rs.getDate(REPLY_DATE_CREATED)));
+			}
+			System.out.println(list.toString());
+			
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		} finally {
+			ConnMgr.close(conn, pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int getTotalCount(int boardId) {
+		System.out.println("getTotalCount()");
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		
+		try {
+			conn = ConnMgr.getConnection();
+			pstmt = conn.prepareStatement(TOTAL_CTN);
+			pstmt.setInt(1, boardId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+			System.out.println("count : " + result);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		} finally {
+			ConnMgr.close(conn, pstmt, rs);
+		}
+		
+		return result;
+	} // end getTotalCount
 
 	
 }

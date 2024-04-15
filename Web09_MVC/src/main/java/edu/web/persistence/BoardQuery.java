@@ -18,11 +18,16 @@ public interface BoardQuery {
 	public static final String SQL_SELECT_BY_BOARD_ID = "SELECT * FROM " + TABLE_NAME + 
 			" WHERE " + COL_BOARD_ID + " = ?"; 
 	
+	public static final String SQL_SELECT_PAGESCOPE = "SELECT * FROM (SELECT " + TABLE_NAME + 
+			".*, ROW_NUMBER() OVER(ORDER BY " + COL_BOARD_ID + " DESC) RN FROM " + TABLE_NAME +
+			") WHERE RN BETWEEN ? AND ?";
+	
+	public static final String SQL_TOTAL_CNT = "SELECT COUNT(" + COL_BOARD_ID + ") AS TOTAL_CNT FROM " + TABLE_NAME;
+	
 	//전체 조회할 수 있다.(+ 페이징 처리)
 	public static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME + 
 			" ORDER BY " + COL_BOARD_ID + " DESC";
-	// SELECT * FROM (SELECT TABLE_NAME.*, ROW_NUMBER() OVER(ORDER BY BOARD_ID) AS RN FROM TABLE_NAME) 
-	// WHERE RN BETWEEN ? AND ?
+	
 	
 	//게시글을 수정할 수 있다.
 	public static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET " + 
@@ -33,6 +38,7 @@ public interface BoardQuery {
 	//게시글을 삭제할 수 있다.
 	public static final String SQL_DELETE = "DELETE " + TABLE_NAME +
 			" WHERE " + COL_BOARD_ID + " = ?";
+	
 	
 }
 

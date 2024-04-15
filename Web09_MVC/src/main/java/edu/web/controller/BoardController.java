@@ -12,16 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.web.domain.BoardVO;
 import edu.web.persistence.BoardDAOImple;
+import edu.web.util.PageCriteria;
+import edu.web.util.PageMaker;
 
 @WebServlet("*.do") // *.do : ~.do로 선언된 HTTP 호출에 대해 반응
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private static final String BOARD_URL = "WEB-INF/board/";
-    private static final String LOGIN_URL = "WEB-INF/login/";
     
     private static final String BOARD = "/board/";
-    private static final String REPLY = "/reply/";
-    private static final String LOGIN = "/login/";
     
     private static final String MAIN = "index";
     private static final String LIST = "list";
@@ -29,21 +28,14 @@ public class BoardController extends HttpServlet {
     private static final String DETAIL = "detail";
     private static final String UPDATE = "update";
     private static final String DELETE = "delete";
-    private static final String REPLYLIST = "replyList";
-    private static final String LOGINN = "login";
-    private static final String IDDUPCHK = "idDupChk";
+    
     private static final String EXTENSION = ".jsp";
     private static final String SERVER_EXTENSION = ".do";
     
     private BoardDAOImple boardDao = null;
-    private ReplyController replyController = null;
-    private LoginController loginController = null;
     
     public BoardController() {
-    	boardDao = BoardDAOImple.getInstance();
-    	replyController = ReplyController.getInstance();
-    	loginController = LoginController.getInstance();
-    }
+    	boardDao = BoardDAOImple.getInstance();    }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,32 +50,23 @@ public class BoardController extends HttpServlet {
 		// /board/detail.jsp				/board/delete.do
 		// /board/update.jsp				jsp는 do로 바꾸고 GET, POST로 구분
 		
-		// 									/reply/list.do
-		// 									/reply/register.do
-		//									/reply/update.do
-		//									/reply/delete.do
 		
 		// /login/login.jsp					/login/login.do
 		// /login/register.jsp				/login/register.do
 		// 									/login/idDupChk.do
 		
-		if(requestURI.contains(LOGIN)) {
-			System.out.println("login 호출 확인");
-			routeLogin(request, response);	
-		}else if(requestURI.contains(LIST + SERVER_EXTENSION)) {
+		if(requestURI.contains(LIST + SERVER_EXTENSION)) {
 			System.out.println("list 호출 확인");
 			list(request, response);
-		}else if(request.getSession().getAttribute("memberId") != null) {
+		//}else if(request.getSession().getAttribute("memberId") != null) {
 			// 세션 확인
-			if(requestURI.contains(BOARD)) {
-				routeBoard(request, response);
-			}else if(requestURI.contains(REPLY)) {
-				routeReply(request, response);
-			}
 		}else {
-			getServletContext().getRequestDispatcher("/" + "WEB-INF/login/" + LOGINN + EXTENSION)
-							   .forward(request, response);
+			routeBoard(request, response);
 		}
+		//}else {
+		//	request.getRequestDispatcher(LOGIN_URL + LOGINN + EXTENSION)
+		//					   .forward(request, response);
+		//}
 		
 		
     } // end service
@@ -116,79 +99,42 @@ public class BoardController extends HttpServlet {
 			}
 		}
 	}
-	
-	private void routeReply(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String requestURI = request.getRequestURI();
-		String requestMethod = request.getMethod();
-		
-		if(requestURI.contains(REGISTER + SERVER_EXTENSION)) {
-			System.out.println("register 호출 확인");
-			if(requestMethod.equals("POST")){
-				replyController.registerPOST(request, response);
-			}
-		} else if(requestURI.contains(REPLYLIST + SERVER_EXTENSION)) {
-			System.out.println("reply list 호출 확인");
-			if(requestMethod.equals("POST")) {
-				replyController.listPOST(request, response);
-			}
-		} else if(requestURI.contains(UPDATE + SERVER_EXTENSION)) {
-			System.out.println("update 호출 확인");
-			if(requestMethod.equals("POST")) {
-				replyController.updatePOST(request, response);
-			} 
-		} else if(requestURI.contains(DELETE + SERVER_EXTENSION)) {
-			System.out.println("delete 호출 확인");
-			if(requestMethod.equals("POST")) {
-				replyController.deletePOST(request, response);
-			}
-		}
-	} // end routeReply
-	
-	private void routeLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		String requestURI = request.getRequestURI();
-		String requestMethod = request.getMethod();
-		
-		if(requestURI.contains(REGISTER + SERVER_EXTENSION)) {
-			System.out.println("login register " + requestMethod);
-			if(requestMethod.equals("GET")) {
-				loginController.registerGET(request, response, getServletContext());
-			}else if(requestMethod.equals("POST")) {
-				loginController.registerPOST(request, response, getServletContext());
-			}
-		}else if(requestURI.contains(LOGINN + SERVER_EXTENSION)) {
-			System.out.println("login login " + requestMethod);
-			if(requestMethod.equals("GET")) {
-				loginController.loginGET(request, response, getServletContext());
-			}else if(requestMethod.equals("POST")) {
-				loginController.loginPOST(request, response, getServletContext());
-			}
-		}else if(requestURI.contains(IDDUPCHK + SERVER_EXTENSION)) {
-			System.out.println("login idDupChk " + requestMethod);
-			if(requestMethod.equals("POST")) {
-				loginController.idDupChk(request, response);
-			}
-		}
-	} // end routeLogin
 
-	// TODO : 전체 게시판 내용(list)을 DB에서 가져오고, 그 데이터를 list.jsp 페이지에 전송
 	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("list()");
-		String path = "/" + BOARD_URL + LIST + EXTENSION;
-		List<BoardVO> list = boardDao.select();
+		String path = BOARD_URL + LIST + EXTENSION;
+		String pageStr = request.getParameter("page");
 		
+		PageCriteria criteria = new PageCriteria();
+		PageMaker pageMaker = new PageMaker();
+		
+		if(pageStr != null) {
+			criteria.setPage(Integer.parseInt(pageStr)); 
+		}
+		pageMaker.setCriteria(criteria);
+		pageMaker.setTotalCount(boardDao.getTotalCount());
+		pageMaker.setPageData();
+		System.out.println("전체 게시글 수 : " + pageMaker.getTotalCount());
+		System.out.println("현재 선택된 페이지 : " + pageMaker.getCriteria().getPage());
+		System.out.println("한 페이지당 게시글 수 : " + pageMaker.getCriteria().getNumsPerPage());
+		System.out.println("페이지 링크 번호 개수 : " + pageMaker.getNumsOfPageLinks());
+		System.out.println("시작 페이지 링크 번호 : " + pageMaker.getStartPageNo());
+		System.out.println("끝 페이지 링크 번호 : " + pageMaker.getEndPageNo());
+		//List<BoardVO> list = boardDao.select();
+		
+		List<BoardVO> list = boardDao.select(criteria);
 		request.setAttribute("list", list);
-		getServletContext().getRequestDispatcher(path).forward(request, response);
+		request.setAttribute("pageMaker", pageMaker);
+		request.getRequestDispatcher(path).forward(request, response);
+		
 	} // end list
 	
-	// TODO : register.jsp 페이지 호출
 	private void registerGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("registerGET()");
-		String path = "/" + BOARD_URL + REGISTER + EXTENSION;
-		getServletContext().getRequestDispatcher(path).forward(request, response);
+		String path = BOARD_URL + REGISTER + EXTENSION;
+		request.getRequestDispatcher(path).forward(request, response);
 	} // end registerGET
 
-	// TODO : register.jsp form으로부터 전송된 데이터를 DB 테이블에 등록
-	// TODO : index.jsp로 이동
 	private void registerPOST(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("registerPOST()");
 		
@@ -196,7 +142,7 @@ public class BoardController extends HttpServlet {
 		String boardContent = request.getParameter("boardContent");
 		String memberId = request.getParameter("memberId");
 		BoardVO board = new BoardVO(0, boardTitle, boardContent, memberId, null);
-		String path = getServletContext().getContextPath() + "/" + MAIN + EXTENSION;
+		String path = MAIN + EXTENSION;
 		int res = boardDao.insert(board);
 		
 		if(res == 1) {
@@ -207,53 +153,49 @@ public class BoardController extends HttpServlet {
 		response.sendRedirect(path);
 	} // end registerPOST
 	
-	// TODO : DB 테이블에서 상세 조회 데이터를 가져와서 detail.jsp 페이지로 전송
 	private void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("detail()");
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		BoardVO board = boardDao.select(boardId);
-		String path = "/" + BOARD_URL + DETAIL + EXTENSION;
+		String path = BOARD_URL + DETAIL + EXTENSION;
 		
 		request.setAttribute("board", board);
-		getServletContext().getRequestDispatcher(path).forward(request, response);
+		request.getRequestDispatcher(path).forward(request, response);
 	} // end detail
 
-	// TODO : DB 테이블에서 상세 조회한 게시글 데이터를 전송하고, update.jsp 페이지 호출
 	private void updateGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("updateGET()");
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		BoardVO board = boardDao.select(boardId);
-		String path = "/" + BOARD_URL + UPDATE + EXTENSION;
+		String path = BOARD_URL + UPDATE + EXTENSION;
 		
 		request.setAttribute("board", board);
-		getServletContext().getRequestDispatcher(path).forward(request, response);
+		request.getRequestDispatcher(path).forward(request, response);
 	} // end updateGET
 
-	// TODO : update.jsp에서 전송된 수정할 데이터를 DB로 전송하여 테이블 수정 수행
-	// TODO : 수정 완료되면, detail.jsp로 이동
 	private void updatePOST(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("updatePOST()");
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		String boardTitle = request.getParameter("boardTitle");
 		String boardContent = request.getParameter("boardContent");
-		String path = getServletContext().getContextPath() + "/" + MAIN + EXTENSION;
+		String path = MAIN + EXTENSION;
 		
 		int res = boardDao.update(new BoardVO(boardId, boardTitle, boardContent, null, null));
 		
 		if(res == 1) {
-			detail(request, response);
+			//detail(request, response);
+			path = DETAIL + SERVER_EXTENSION;
+			response.sendRedirect(path + "?boardId=" + boardId);
 		}else {
 			response.sendRedirect(path);
 		}
 	} // end updatePOST
 
-	// TODO : 게시글 번호를 전송받아, DB 테이블에서 데이터 삭제
-	// TODO : 삭제가 완료되면, index.jsp로 이동
 	private void deletePOST(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("deletePOST()");
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		int res = boardDao.delete(boardId);
-		String path = getServletContext().getContextPath() + "/" + MAIN + EXTENSION;
+		String path = MAIN + EXTENSION;
 		
 		if(res == 1) {
 			response.sendRedirect(path);

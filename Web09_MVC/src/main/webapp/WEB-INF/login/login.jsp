@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h2>로그인</h2>
-	<form action="login/login.do" method="POST">
+	<form action="member/login" method="POST">
 		<div>
 			<p>ID</p>
 			<input type="text" name="memberId" required>
@@ -22,7 +22,7 @@
 		</div>
 		<input type="submit" value="로그인">
 	</form>
-	<a href="register.do">회원가입</a>
+	<a href="member/register">회원가입</a>
 	
 </body>
 </html>

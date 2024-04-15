@@ -160,7 +160,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="C:\Users\Eiwon\Desktop\WebCodes\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\ROOT" path="" reloadable="false"/><Context docBase="C:\Users\Eiwon\Desktop\WebCodes\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Web09_MVC" path="/Web09_MVC" reloadable="true" source="org.eclipse.jst.jee.server:Web09_MVC">
+      <Context docBase="C:\Users\sdedu\Desktop\WEB_CODES\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\ROOT" path="" reloadable="false"/><Context docBase="C:\Users\sdedu\Desktop\WEB_CODES\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Web09_MVC" path="/Web09_MVC" reloadable="true" source="org.eclipse.jst.jee.server:Web09_MVC">
 	<!-- DBCP 사용하기 위한 Java Bean 설정 -->
 	<Resource auth="Container" driverClassName="oracle.jdbc.driver.OracleDriver" maxTotal="50" maxWaitMillis="1000" name="dbcp/orcl" password="tiger" type="javax.sql.DataSource" url="jdbc:oracle:thin:@localhost:1521:xe" username="scott"/>
 	<!-- 

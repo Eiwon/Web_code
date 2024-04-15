@@ -10,7 +10,7 @@
 <body>
 	<h2>회원 가입</h2>
 	
-	<form action="register.do" method="POST">
+	<form action="register" method="POST">
 		<div>
 			<p>ID</p>
 			<input type="text" name="memberId" id="inputId" required>
@@ -52,7 +52,7 @@
 			
 			$.ajax({
 				type : "POST",
-				url : "idDupChk.do",
+				url : "idDupChk",
 				data : {
 					"memberId" : memberId	
 				},

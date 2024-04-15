@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h2>글 작성</h2>
-	<form action="board/register.do" method="POST">
+	<form action="register.do" method="POST">
 		<div>
 			제목
 			<input type="text" name="boardTitle" required>

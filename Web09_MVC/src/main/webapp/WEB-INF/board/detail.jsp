@@ -1,6 +1,7 @@
 <%@page import="edu.web.domain.BoardVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,32 +10,30 @@
 <title>Detail</title>
 </head>
 <body>
-	<%
-		BoardVO board = (BoardVO)request.getAttribute("board");
-	%>
 	<div>
 		<div>
-			글 번호 : <span><%=board.getBoardId() %></span>
+			글 번호 : <span>${board.boardId }</span>
 		</div>
 		<div>
-			<h2> 제목 : <%=board.getBoardTitle() %></h2>
+			<h2> 제목 : ${board.boardTitle }</h2>
 		</div>
 		<div>
-			작성자 : <strong><%=board.getMemberId() %></strong>
+			작성자 : <strong>${board.memberId }</strong>
 		</div>
 		<div>
-			작성시간 : <span><%=board.getBoardDateCreated() %></span>
+			작성시간 : <span>${board.boardDateCreated }</span>
 		</div>
 		<div>
 			<textarea rows="10" cols="30" readonly>
-				<%=board.getBoardContent() %>
+				${board.boardContent }
 			</textarea>
 		</div>
 	</div>
 	<div>
 		<table>
-			<tbody id="replyList" style="height: 100px;"></tbody>
+			<tbody id="replyList" style="height: 100px; text-align: center;"></tbody>
 		</table>
+		<div id="replyLink" style="text-align: center; display: flex;"></div>
 		<div>
 			<input type="text" id="memberId" placeholder="작성자 ID">
 			<input type="text" id="replyContent" placeholder="댓글 내용">
@@ -43,13 +42,13 @@
 	</div>
 	<div>
 		<input type="button" value="수정하기" 
-			onclick="location.href='board/update.do?boardId=' + '<%=board.getBoardId() %>'">
-		<form action="board/delete.do" method="POST">
-			<input type="text" name="boardId" value="<%=board.getBoardId() %>" hidden="">
+			onclick="location.href='update.do?boardId=' + '${board.boardId }'">
+		<form action="delete.do" method="POST">
+			<input type="hidden" name="boardId" value="${board.boardId }">
 			<input type="submit" value="삭제하기"> 
 		</form>
 		<input type="button" value="목록으로"
-			onclick="location.href='../index.jsp'">
+			onclick="location.href='index.jsp'">
 	</div>
 	
 	<script type="text/javascript">
@@ -57,7 +56,7 @@
 		let replyList = $('#replyList');
 		
 		$(document).ready(function(){
-			getReplyList();
+			getReplyList(1);
 			
 			$('#btnWriteReply').click(function(){
 				writeReply();
@@ -66,27 +65,30 @@
 		}); // end document.ready
 		
 			
-		function getReplyList(){
+		function getReplyList(page){
 			console.log("getReplyList");
 			$.ajax({
 				type : "POST",
-				url : "../reply/list.do",
+				url : "replies/list",
 				data : {
-					"boardId" : "<%=board.getBoardId()%>"
+					"boardId" : "${board.boardId }",
+					"page" : page
 				},
 				success : function(result){
 					console.log(result);
 					let jsonRes = JSON.parse(result);
-					let reply = "";
+					let list = JSON.parse(jsonRes.replyList);
+					let pageMaker = JSON.parse(jsonRes.pageMaker);
+					
 					replyList.html("");
-					for(x in jsonRes){
-						let writerBlock = $('<div></div>').text(jsonRes[x].memberId);
-						let dateBlock = $('<div></div>').text(jsonRes[x].replyDateCreated);
-						let contentBlock = $('<div></div>').text(jsonRes[x].replyContent);
+					for(x in list){
+						let writerBlock = $('<div></div>').text(list[x].memberId);
+						let dateBlock = $('<div></div>').text(list[x].replyDateCreated);
+						let contentBlock = $('<div></div>').text(list[x].replyContent);
 						let btnDelete = $('<input type="button" value="X">').click(function(){
 							deleteReply(this);
 						});
-						let hiddenReplyId = $('<p hidden=""></p>').text(jsonRes[x].replyId);
+						let hiddenReplyId = $('<p hidden=""></p>').text(list[x].replyId);
 						let btnUpdate = $('<input type="button" value="수정">').click(function(){
 							updateReply(this);	
 						});
@@ -100,6 +102,18 @@
 						
 						replyList.append(replyBlock);
 					}
+					
+					let replyLink = $('#replyLink');
+					replyLink.html("");
+					if(pageMaker.hasPrev){
+						replyLink.append("<p onclick='getReplyList(" + (pageMaker.startPageNo -1) + ")'>이전&nbsp</p>");
+					}
+					for(let x = pageMaker.startPageNo; x <= pageMaker.endPageNo; x++){
+						replyLink.append("<p onclick='getReplyList(" + x + ")'>" + x + "&nbsp</p>");
+					}
+					if(pageMaker.hasNext){
+						replyLink.append("<p onclick='getReplyList(" + (pageMaker.endPageNo +1) + ")'>다음</p>");
+					}
 				}
 			}); // end ajax
 		} // end getReplyList
@@ -111,14 +125,14 @@
 			if(content.length == 0 || writer.length == 0) return;
 			
 			let reply = {
-				"boardId" : "<%=board.getBoardId()%>",
+				"boardId" : "${board.boardId }",
 				"memberId" : writer,
 				"replyContent" : content
 			};
 			
 			$.ajax({
 				type : "POST",
-				url : "../reply/register.do",
+				url : "replies/add",
 				data : {
 					"reply" : JSON.stringify(reply)
 				},
@@ -126,7 +140,7 @@
 					console.log(result);
 					console.log(typeof result);
 					if(result == '1'){
-						getReplyList();
+						getReplyList(1);
 						$('#replyContent').val("");
 					}
 				}
@@ -139,14 +153,14 @@
 			
 			$.ajax({
 				type : "POST",
-				url : "../reply/delete.do",
+				url : "replies/delete",
 				data : {
 					"replyId" : replyId
 				},
 				success : function(result){
 					console.log(result);
 					if(result == '1'){
-						getReplyList();
+						getReplyList(1);
 					}
 				}
 			}); // end ajax
@@ -159,7 +173,7 @@
 			
 			$.ajax({
 				type : "POST",
-				url : "../reply/update.do",
+				url : "replies/update",
 				data : {
 					"replyId" : replyId,
 					"replyContent" : changed
@@ -167,7 +181,7 @@
 				success : function(result){
 					console.log(result);
 					if(result == '1'){
-						getReplyList();
+						getReplyList(1);
 					}
 				}
 			}); // end ajax

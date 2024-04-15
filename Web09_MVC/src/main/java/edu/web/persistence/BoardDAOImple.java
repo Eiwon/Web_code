@@ -9,6 +9,7 @@ import java.util.List;
 
 import edu.web.dbcp.connmgr.ConnMgr;
 import edu.web.domain.BoardVO;
+import edu.web.util.PageCriteria;
 
 public class BoardDAOImple implements BoardDAO, BoardQuery{
 	
@@ -167,4 +168,70 @@ public class BoardDAOImple implements BoardDAO, BoardQuery{
 		}
 		return result;
 	} // end delete
+
+	@Override
+	public List<BoardVO> select(PageCriteria criteria) {
+		List<BoardVO> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = ConnMgr.getConnection();
+			pstmt = conn.prepareStatement(SQL_SELECT_PAGESCOPE);
+			pstmt.setInt(1, criteria.getStart());
+			pstmt.setInt(2, criteria.getEnd());
+			
+			rs = pstmt.executeQuery();
+
+			int boardId;
+			String boardTitle, boardContent, memberId;
+			Date boardDateCreated;
+			BoardVO vo = null;
+
+			while (rs.next()) {
+				boardId = rs.getInt(COL_BOARD_ID);
+				boardTitle = rs.getString(COL_BOARD_TITLE);
+				boardContent = rs.getString(COL_BOARD_CONTENT);
+				memberId = rs.getString(COL_MEMBER_ID);
+				boardDateCreated = rs.getTimestamp(COL_BOARD_DATE_CREATED);
+				vo = new BoardVO(boardId, boardTitle, boardContent, memberId, boardDateCreated);
+				list.add(vo);
+			}
+			System.out.println("select page 성공");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			ConnMgr.close(conn, pstmt, rs);
+		}
+
+		return list;
+	} // end select
+	
+	public int getTotalCount() {
+		System.out.println("getTotalCount()");
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = ConnMgr.getConnection();
+			pstmt = conn.prepareStatement(SQL_TOTAL_CNT);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getInt("TOTAL_CNT");
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		} finally {
+			ConnMgr.close(conn, pstmt, rs);
+		}
+		
+		return result;
+	} // end getTotalCount
+	
 }

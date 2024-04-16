@@ -60,11 +60,13 @@ public class ReplyController extends HttpServlet{
 		}
 	}
 	
+	// boardId에 해당하는 댓글 리스트 조회
+	// 데이터를 JSON으로 변환하여 전송
 	public void listPOST(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("replyListPOST()");
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
-		String page = request.getParameter("page");
 		PageCriteria criteria = new PageCriteria();
+		String page = request.getParameter("page");
 		
 		if(page != null) {
 			criteria.setPage(Integer.parseInt(page));;
@@ -139,7 +141,7 @@ public class ReplyController extends HttpServlet{
 	public void updatePOST(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("replyUpdatePOST()");
 		int replyId = Integer.parseInt(request.getParameter("replyId"));
-		String replyContent = (String)request.getParameter("replyContent");
+		String replyContent = request.getParameter("replyContent");
 		
 		int res = replyDao.updateReply(new ReplyVO(replyId, 0, null, replyContent, null));
 		

@@ -81,15 +81,34 @@
 					let pageMaker = JSON.parse(jsonRes.pageMaker);
 					
 					replyList.html("");
+					/*
+						let list = "";
+						$(list).each(function(){
+							console.log(this); // this : 각 데이터
+							
+							let replyDateCreated = new Date(this.replyDateCreated);
+							
+							list += '<div class="reply_item"' + '<pre>' + 
+							'<input type="hidden" id="replyId" value="' + this.replyId + '">'
+							+ this.memberId 
+							+ '&nbsp;&nbsp;' + 
+							'<input type="text" id="replyContent" value="' + this.replyContent
+							+'">&nbsp;&nbsp;' +
+							replyDateCreated
+							+'">&nbsp;&nbsp;' +
+							'<button class="btn_update">수정</button>'
+							+ '<button class="btn_delete">수정</button>' + '</pre>' + '</div>';
+						}); // end each()
+					*/
 					for(x in list){
 						let writerBlock = $('<div></div>').text(list[x].memberId);
-						let dateBlock = $('<div></div>').text(list[x].replyDateCreated);
+						let dateBlock = $('<div></div>').text(new Date(list[x].replyDateCreated));
 						let contentBlock = $('<div></div>').text(list[x].replyContent);
-						let btnDelete = $('<input type="button" value="X">').click(function(){
+						let btnDelete = $('<input type="button" class="btn_delete" value="삭제">').click(function(){
 							deleteReply(this);
 						});
-						let hiddenReplyId = $('<p hidden=""></p>').text(list[x].replyId);
-						let btnUpdate = $('<input type="button" value="수정">').click(function(){
+						let hiddenReplyId = $('<input type="hidden"></input>').text(list[x].replyId);
+						let btnUpdate = $('<input type="button" class="btn_update" value="수정">').click(function(){
 							updateReply(this);	
 						});
 						let replyBlock = $('<div></div>');
@@ -140,6 +159,7 @@
 					console.log(result);
 					console.log(typeof result);
 					if(result == '1'){
+						alert("댓글 입력 성공");
 						getReplyList(1);
 						$('#replyContent').val("");
 					}
@@ -160,6 +180,7 @@
 				success : function(result){
 					console.log(result);
 					if(result == '1'){
+						alert("댓글 삭제 성공");
 						getReplyList(1);
 					}
 				}
@@ -181,11 +202,23 @@
 				success : function(result){
 					console.log(result);
 					if(result == '1'){
+						alert("댓글 수정 성공");
 						getReplyList(1);
 					}
 				}
 			}); // end ajax
 		} // end updateReply
+		
+		/*
+		$('#replyList').on('click', '.reply_item .btn_update', function(){
+			console.log(this);
+			let replyId = $(this).prevAll('#replyId').val();
+			let replyContent = $(this).prevAll('#replyContent').val();
+			console.log("선택된 댓글 번호 : " + replyId + ", 댓글 내용 : " + replyContent);
+		}));
+		
+		*/
+		
 		
 	</script>
 	

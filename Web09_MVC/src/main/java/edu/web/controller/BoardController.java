@@ -2,7 +2,9 @@ package edu.web.controller;
 
 import java.io.IOException;
 import java.nio.file.spi.FileSystemProvider;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,6 +45,13 @@ public class BoardController extends HttpServlet {
 		String requestMethod = request.getMethod();
 		System.out.println("호출 경로 : " + requestURI);
 		System.out.println("호출 방식 : " + requestMethod);
+		
+		Map<String, String[]> paramMap = request.getParameterMap();
+		Iterator<String> iterator = request.getParameterNames().asIterator();
+		while(iterator.hasNext()) {
+			System.out.println(iterator.next());
+		}
+		
 		
 		// GET								POST
 		// /board/list.jsp					/board/register.do

@@ -13,53 +13,68 @@ import edu.web.domain.MemberVO;
 import edu.web.persistence.MemberDAO;
 import edu.web.persistence.MemberDAOImple;
 
-@WebServlet("/member/*")
-public class LoginController extends HttpServlet{
+public class LoginController {
 	private static final long serialVersionUID = 1L;
 	
-	private static final String LOGIN_URL = "WEB-INF/login/";
+	private static final String LOGIN_URL = "/WEB-INF/login/";
+	private static final String BOARD_URL = "/WEB-INF/board/";
 	private static final String LOGIN = "login";
 	private static final String REGISTER = "register";
     private static final String IDDUPCHK = "idDupChk";
-    private static final String MAIN = "index";
+    private static final String MAIN = "/index";
     private static final String EXTENSION = ".jsp";
+    private static final String SERVER_EXTENSION = ".do";
 	private MemberDAO memberDao = null;
 	
-	public LoginController() {
+	private static LoginController instance = null;
+	
+	private LoginController() {
 		memberDao = MemberDAOImple.getInstance();
 	};
 	
-	@Override
+	public static LoginController getInstance() {
+		if(instance == null)
+			instance = new LoginController();
+		return instance;
+	}
+	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String requestURI = request.getRequestURI();
 		String requestMethod = request.getMethod();
 		System.out.println("requestURI " + requestURI);
 		
-		if(requestURI.contains(REGISTER)) {
+		String[] requestSplit = requestURI.split("[./]");
+		String actName = requestSplit[3];
+		
+		
+		if(actName.equals(REGISTER)) {
 			System.out.println("login register " + requestMethod);
 			if(requestMethod.equals("GET")) {
 				registerGET(request, response);
 			}else if(requestMethod.equals("POST")) {
 				registerPOST(request, response);
 			}
-		}else if(requestURI.contains(LOGIN)) {
+		}else if(actName.equals(IDDUPCHK)) {
+			System.out.println("login idDupChk " + requestMethod);
+			if(requestMethod.equals("POST")) {
+				idDupChk(request, response);
+			}
+		}else if(actName.equals(LOGIN)){
 			System.out.println("login login " + requestMethod);
 			if(requestMethod.equals("GET")) {
 				loginGET(request, response);
 			}else if(requestMethod.equals("POST")) {
 				loginPOST(request, response);
 			}
-		}else if(requestURI.contains(IDDUPCHK)) {
-			System.out.println("login idDupChk " + requestMethod);
-			if(requestMethod.equals("POST")) {
-				idDupChk(request, response);
-			}
 		}
-	}
+	} // end service
 	
 	// /login/login.jsp 로 이동
 	public void loginGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String path = LOGIN_URL + LOGIN + EXTENSION;
+		
+		request.setAttribute("returnPath", request.getAttribute("returnPath"));
+		request.setAttribute("returnMethod", request.getAttribute("returnMethod"));
 		request.getRequestDispatcher(path).forward(request, response);
 	} // end loginGET
 	
@@ -68,24 +83,34 @@ public class LoginController extends HttpServlet{
 		System.out.println("loginPOST()");
 		String memberId = request.getParameter("memberId");
 		String pw = request.getParameter("pw");
-		String successPath = MAIN + EXTENSION;
-		
-		System.out.println(request.getAttribute("returnURI"));
-		
 		
 		String resId = memberDao.loginChk(memberId, pw);
 		if(resId != null) {
 			System.out.println("인증 성공");
 			request.getSession().setAttribute("memberId", memberId);
 			request.getSession().setMaxInactiveInterval(600);
-			response.sendRedirect(successPath);
+			
+			System.out.println("return path : " + request.getParameter("returnPath"));
+			
+			if(request.getParameter("returnPath") != null) {
+				response.sendRedirect(request.getParameter("returnPath"));
+			}else {
+				request.getRequestDispatcher(MAIN + EXTENSION).forward(request, response);
+			}
 		}else {
 			System.out.println("잘못된 ID 또는 비밀번호");
-			String path = LOGIN_URL + LOGIN + EXTENSION;
-			request.getRequestDispatcher(path).forward(request, response);
+			String path = LOGIN + EXTENSION;
+			response.sendRedirect(path);
 		}
 		
 	} // end loginPOST
+	
+	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		System.out.println("logout()");
+		request.getSession().invalidate();
+		String path = LOGIN_URL + LOGIN + EXTENSION;
+		request.getRequestDispatcher(path).forward(request, response);
+	} // end logout
 	
 	// /login/register.jsp 로 이동
 	public void registerGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{	

@@ -37,7 +37,7 @@ li {
 		</thead>
 		<tbody>
 			<c:forEach var="vo" items="${list }">
-				<tr onclick="location.href='detail.do?boardId=' + '${vo.boardId }'">
+				<tr onclick="location.href='board/detail.do?boardId=' + '${vo.boardId }'">
 					<td>${vo.boardId }</td>
 					<td>${vo.boardTitle }</td>
 					<td>${vo.memberId }</td>
@@ -48,17 +48,17 @@ li {
 	</table>
 	<ul>
 		<c:if test="${pageMaker.hasPrev }">
-			<li><a href="list.do?page=${pageMaker.startPageNo -1 }">이전</a></li>
+			<li><a href="board/list.do?page=${pageMaker.startPageNo -1 }">이전</a></li>
 		</c:if>
 		<c:forEach var="i" begin="${pageMaker.startPageNo }" end="${pageMaker.endPageNo }" >
-			<li><a href="list.do?page=${i }">${i }</a></li>
+			<li><a href="board/list.do?page=${i }">${i }</a></li>
 		</c:forEach>
 		<c:if test="${pageMaker.hasNext }">
-			<li><a href="list.do?page=${pageMaker.endPageNo +1 }">다음</a></li>
+			<li><a href="board/list.do?page=${pageMaker.endPageNo +1 }">다음</a></li>
 		</c:if>
 	</ul>
 	
-	<input type="button" value="글 작성" onclick="location.href='register.do'">
-	<input type="button" value="로그인" onclick="location.href='member/login'">
+	<input type="button" value="글 작성" onclick="location.href='board/register.do'">
+	<input type="button" value="로그인" onclick="location.href='login/login.do'">
 </body>
 </html>

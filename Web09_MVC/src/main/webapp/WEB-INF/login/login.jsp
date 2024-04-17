@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,7 @@
 </head>
 <body>
 	<h2>로그인</h2>
-	<form action="member/login" method="POST">
+	<form action="<%= request.getContextPath() %>/login/login.do" method="POST">
 		<div>
 			<p>ID</p>
 			<input type="text" name="memberId" required>
@@ -18,11 +19,11 @@
 			<input type="password" name="pw" required>
 		</div>
 		<div>
-			
+			<input type="hidden" name="returnPath" value="<%=request.getAttribute("returnPath") %>">
 		</div>
 		<input type="submit" value="로그인">
 	</form>
-	<a href="member/register">회원가입</a>
+	<a href="register.do">회원가입</a>
 	
 </body>
 </html>

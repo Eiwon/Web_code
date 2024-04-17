@@ -48,7 +48,7 @@
 			<input type="submit" value="삭제하기"> 
 		</form>
 		<input type="button" value="목록으로"
-			onclick="location.href='index.jsp'">
+			onclick="location.href='../index.jsp'">
 	</div>
 	
 	<script type="text/javascript">
@@ -69,7 +69,7 @@
 			console.log("getReplyList");
 			$.ajax({
 				type : "POST",
-				url : "replies/list",
+				url : "../replies/list",
 				data : {
 					"boardId" : "${board.boardId }",
 					"page" : page
@@ -151,7 +151,7 @@
 			
 			$.ajax({
 				type : "POST",
-				url : "replies/add",
+				url : "../replies/add",
 				data : {
 					"reply" : JSON.stringify(reply)
 				},
@@ -173,7 +173,7 @@
 			
 			$.ajax({
 				type : "POST",
-				url : "replies/delete",
+				url : "../replies/delete",
 				data : {
 					"replyId" : replyId
 				},
@@ -194,7 +194,7 @@
 			
 			$.ajax({
 				type : "POST",
-				url : "replies/update",
+				url : "../replies/update",
 				data : {
 					"replyId" : replyId,
 					"replyContent" : changed

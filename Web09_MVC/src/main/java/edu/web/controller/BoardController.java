@@ -20,9 +20,11 @@ import edu.web.util.PageMaker;
 @WebServlet("*.do") // *.do : ~.do로 선언된 HTTP 호출에 대해 반응
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private static final String BOARD_URL = "WEB-INF/board/";
+    private static final String BOARD_URL = "/WEB-INF/board/";
+    private static final String LOGIN_URL = "/WEB-INF/login/";
     
     private static final String BOARD = "/board/";
+    private static final String LOGIN = "/login/";
     
     private static final String MAIN = "index";
     private static final String LIST = "list";
@@ -46,12 +48,24 @@ public class BoardController extends HttpServlet {
 		System.out.println("호출 경로 : " + requestURI);
 		System.out.println("호출 방식 : " + requestMethod);
 		
-		Map<String, String[]> paramMap = request.getParameterMap();
-		Iterator<String> iterator = request.getParameterNames().asIterator();
-		while(iterator.hasNext()) {
-			System.out.println(iterator.next());
+		String[] requestSplit = requestURI.split("[./]");
+		String ctrName = requestSplit[2];
+		
+		
+		if(ctrName.equals("board")) {
+			System.out.println("board 호출 확인");
+			routeBoard(request, response);
+		}else if(ctrName.equals("login")) {
+			System.out.println("login 호출 확인");
+			LoginController.getInstance().service(request, response);
 		}
 		
+//		Map<String, String[]> paramMap = request.getParameterMap();
+//		Iterator<String> iterator = request.getParameterNames().asIterator();
+//		while(iterator.hasNext()) {
+//			System.out.println(iterator.next());
+//		}
+//		
 		
 		// GET								POST
 		// /board/list.jsp					/board/register.do
@@ -61,22 +75,8 @@ public class BoardController extends HttpServlet {
 		
 		
 		// /login/login.jsp					/login/login.do
-		// /login/register.jsp				/login/register.do
-		// 									/login/idDupChk.do
-		
-		if(requestURI.contains(LIST + SERVER_EXTENSION)) {
-			System.out.println("list 호출 확인");
-			list(request, response);
-		//}else if(request.getSession().getAttribute("memberId") != null) {
-			// 세션 확인
-		}else {
-			routeBoard(request, response);
-		}
-		//}else {
-		//	request.getRequestDispatcher(LOGIN_URL + LOGINN + EXTENSION)
-		//					   .forward(request, response);
-		//}
-		
+ 		// /login/register.jsp				/login/register.do
+//		// 									/login/idDupChk.do
 		
     } // end service
 
@@ -84,18 +84,24 @@ public class BoardController extends HttpServlet {
 		String requestURI = request.getRequestURI();
 		String requestMethod = request.getMethod();
 		
-		if(requestURI.contains(REGISTER + SERVER_EXTENSION)) {
+		if(requestURI.contains(LIST + SERVER_EXTENSION)) {
+			System.out.println("list 호출 확인");
+			list(request, response);
+		} else if(requestURI.contains(REGISTER + SERVER_EXTENSION)) {
 			System.out.println("register 호출 확인");
+			sessionChk(request, response);
 			if(requestMethod.equals("GET")) { // 페이지 불러오기
 				registerGET(request, response);
 			}else if(requestMethod.equals("POST")){ // DB에 저장
 				registerPOST(request, response);
 			}
+			
 		} else if(requestURI.contains(DETAIL + SERVER_EXTENSION)) {
 			System.out.println("detail 호출 확인");
 			detail(request, response);
 		} else if(requestURI.contains(UPDATE + SERVER_EXTENSION)) {
 			System.out.println("update 호출 확인");
+			sessionChk(request, response);
 			if(requestMethod.equals("GET")) {
 				updateGET(request, response);
 			} else if(requestMethod.equals("POST")) {
@@ -103,6 +109,7 @@ public class BoardController extends HttpServlet {
 			}
 		} else if(requestURI.contains(DELETE + SERVER_EXTENSION)) {
 			System.out.println("delete 호출 확인");
+			sessionChk(request, response);
 			if(requestMethod.equals("POST")) {
 				deletePOST(request, response);
 			}
@@ -151,7 +158,7 @@ public class BoardController extends HttpServlet {
 		String boardContent = request.getParameter("boardContent");
 		String memberId = request.getParameter("memberId");
 		BoardVO board = new BoardVO(0, boardTitle, boardContent, memberId, null);
-		String path = MAIN + EXTENSION;
+		String path = "../" + MAIN + EXTENSION;
 		int res = boardDao.insert(board);
 		
 		if(res == 1) {
@@ -187,7 +194,7 @@ public class BoardController extends HttpServlet {
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		String boardTitle = request.getParameter("boardTitle");
 		String boardContent = request.getParameter("boardContent");
-		String path = MAIN + EXTENSION;
+		String path = "../" + MAIN + EXTENSION;
 		
 		int res = boardDao.update(new BoardVO(boardId, boardTitle, boardContent, null, null));
 		
@@ -204,7 +211,7 @@ public class BoardController extends HttpServlet {
 		System.out.println("deletePOST()");
 		int boardId = Integer.parseInt(request.getParameter("boardId"));
 		int res = boardDao.delete(boardId);
-		String path = MAIN + EXTENSION;
+		String path = "../" + MAIN + EXTENSION;
 		
 		if(res == 1) {
 			response.sendRedirect(path);
@@ -212,7 +219,18 @@ public class BoardController extends HttpServlet {
 			response.sendRedirect(path);
 		}
 	} // end deletePOST
-
+	
+	private void sessionChk(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getSession().getAttribute("memberId") == null) {
+			System.out.println("세션 없음");
+			System.out.println(request.getServletPath());
+			request.setAttribute("returnPath", request.getRequestURI());
+		
+			request.getRequestDispatcher(LOGIN + "login" + SERVER_EXTENSION).forward(request, response);
+		}else {
+			return;
+		}
+	}
 }
 
 
